@@ -1,6 +1,18 @@
 """Tests de la configuración y de las variables de entorno."""
 import config
 
+from datetime import datetime
+
+import pytest
+
+import utils
+
+
+@pytest.fixture
+def hora_fija(monkeypatch):
+    """Simula que son las 08:46 ET del 21-sep-2026."""
+    fake = datetime(2026, 9, 21, 8, 46, tzinfo=utils.NY_TZ)
+    monkeypatch.setattr(utils, "now_ny", lambda: fake)
 
 def test_configuracion_valida():
     config.validate_config()

@@ -10,10 +10,9 @@ from __future__ import annotations
 
 import json
 from datetime import date, datetime, timedelta
-
 import numpy as np
 import pandas as pd
-
+import pytest
 import candidate_filter
 import config
 import gemini_analyzer as ga
@@ -356,6 +355,11 @@ def _real_resistance_levels(
 # Tests
 # --------------------------------------------------------------------------- #
 
+@pytest.fixture
+def hora_fija(monkeypatch):
+    """Simula que son las 08:46 ET del 21-sep-2026."""
+    fake = datetime(2026, 9, 21, 8, 46, tzinfo=utils.NY_TZ)
+    monkeypatch.setattr(utils, "now_ny", lambda: fake)
 def test_pipeline_completo_sin_gemini():
     result = run(use_gemini=False)
 
@@ -392,7 +396,7 @@ def test_pipeline_completo_sin_gemini():
     assert ga.UNAVAILABLE_NOTE in result["gemini"]["no_trade_reason"]
 
 
-def test_pipeline_calcula_rvol_y_niveles():
+def test_pipeline_calcula_rvol_y_niveles(hora_fija):
     analysis = run(
         use_gemini=False
     )["analyses"]["FUERTE"]
