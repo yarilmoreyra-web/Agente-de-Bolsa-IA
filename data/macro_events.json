@@ -1,0 +1,23 @@
+{
+  "_instrucciones": [
+    "Calendario macro y de la Fed, mantenido A MANO. El agente NUNCA inventa eventos.",
+    "Añade una entrada por publicación relevante: FOMC, IPC (CPI), empleo (payrolls),",
+    "PIB, PCE, comparecencias de la Fed, vencimientos de opciones, etc.",
+    "Campos de cada evento: date (AAAA-MM-DD), time (HH:MM en hora de Nueva York),",
+    "name, importance ('alta' | 'media' | 'baja') y notes (texto libre, opcional).",
+    "covered_dates: fechas que ya has revisado. Sirve para distinguir 'hoy no hay",
+    "nada relevante' de 'no he cargado el calendario'. Si la fecha del día no",
+    "aparece ni en events ni en covered_dates, el informe dirá:",
+    "'Calendario macro no cargado para hoy'."
+  ],
+  "covered_dates": [],
+  "events": [
+    {
+      "date": "2026-01-28",
+      "time": "14:00",
+      "name": "Decisión de tipos del FOMC",
+      "importance": "alta",
+      "notes": "Rueda de prensa a las 14:30 ET. Ejemplo: sustitúyelo por tus fechas."
+    }
+  ]
+}

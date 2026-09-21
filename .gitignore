@@ -1,0 +1,15 @@
+# Entorno virtual y caché de Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secretos: nunca subir
+.env
+
+# Logs locales
+logs/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
