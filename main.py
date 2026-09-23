@@ -37,6 +37,7 @@ import report as report_module
 import technical_analysis
 import telegram as telegram_module
 import utils
+import requests
 
 logger = logging.getLogger("trading_agent.main")
 
@@ -490,7 +491,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     else:
         telegram_attempted = True
         html_text = report_module.markdown_to_telegram_html(markdown_report)
-        send_result = telegram_module.send_report(html_text, env)
+        send_result = telegram_module.send_report(html_text, env, http_post=requests.post)
         if send_result.ok:
             sent = True
             print(f"Informe enviado a Telegram ({send_result.parts_sent} mensaje(s)).")
