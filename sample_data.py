@@ -103,7 +103,7 @@ def make_report_data(**overrides: Any) -> ReportData:
               "warnings": ["AMD: el pre-market de Gemini difería del de Python; prevalece Python"],
               "available": True}
     base = dict(session_date=SESSION, snapshot_ts=SNAPSHOT_TS, sent_at=SENT_ON_TIME,
-                session_type="sesión normal", universe_count=40,
+                session_type="sesión normal", universe_size=40,
                 universe_source="lista_tickers.xlsx", context=make_context(),
                 candidates=candidates, gemini=gemini)
     base.update(overrides)

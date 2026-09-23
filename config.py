@@ -135,21 +135,9 @@ RVOL = RvolConfig()
 # --------------------------------------------------------------------------
 # Filtro de candidatas
 # --------------------------------------------------------------------------
-@dataclass(frozen=True)
-class FilterConfig:
-    """Puertas duras y selección de candidatas (valores por defecto)."""
-
-    min_price: float = 5.0
-    min_avg_volume: float = 1_000_000
-    min_avg_dollar_volume: float = 20_000_000
-    min_premarket_volume: float = 25_000
-    min_abs_gap_pct: float = 1.0
-    min_score: float = 40.0
-    min_candidates: int = 6
-    max_candidates: int = 10
-
-
-FILTER = FilterConfig()
+# (Ver la definición completa y activa de FilterConfig/FILTER más abajo,
+# junto con FilterWeights y FilterPenalties: aquí solo van los pesos
+# globales de puntuación, que validate_config() comprueba que sumen 100.)
 
 
 @dataclass(frozen=True)
@@ -223,131 +211,12 @@ TRADE = TradeConfig()
 MIN_RR = TRADE.min_rr
 
 
+
 # --------------------------------------------------------------------------
 # Noticias y catalizadores
 # --------------------------------------------------------------------------
-CATEGORY_KEYWORDS: Dict[str, Tuple[str, ...]] = {
-    "earnings": (
-        "earnings", "eps", "quarterly results", "quarterly revenue",
-        "beats estimates", "misses estimates", "resultados trimestrales",
-        "ganancias",
-    ),
-    "guidance": (
-        "guidance", "outlook", "raises forecast", "cuts forecast",
-        "lowers forecast", "previsión", "proyección",
-    ),
-    "fda": (
-        "fda", "phase 3", "phase 2", "clinical trial", "approval",
-        "aprobación", "ensayo clínico",
-    ),
-    "contracts": (
-        "contract", "awarded", "wins order", "contrato", "adjudica",
-    ),
-    "m_and_a": (
-        "acquire", "acquisition", "merger", "buyout", "takeover",
-        "to be acquired", "adquisición", "fusión", "opa ",
-    ),
-    "regulation": (
-        "regulator", "antitrust", "sanction", "tariff", "investigation",
-        "probe", "regulación", "investigación",
-    ),
-    "upgrade_downgrade": (
-        "upgrade", "downgrade", "initiates coverage", "reiterates",
-        "mejora recomendación", "rebaja recomendación",
-    ),
-    "price_target": (
-        "price target", "raises target", "lowers target", "precio objetivo",
-    ),
-    "new_product": (
-        "launch", "unveils", "introduces", "new product", "lanza",
-        "presenta nuevo",
-    ),
-    "agreements": (
-        "partnership", "agreement", "collaboration", "alliance", "acuerdo",
-        "alianza",
-    ),
-    "litigation": (
-        "lawsuit", "sues", "settlement", "class action", "litigation",
-        "demanda",
-    ),
-    "financing": (
-        "offering", "convertible", "share sale", "buyback", "repurchase",
-        "financing", "dividend", "ampliación de capital", "recompra",
-    ),
-    "insiders": (
-        "insider", "form 4", "director buys", "ceo sells", "ceo buys",
-    ),
-    "sector": (
-        "sector", "industry", "peers", "chip stocks", "semiconductor stocks",
-    ),
-    "macro_fed": (
-        "fomc", "rate cut", "rate hike", "inflation", "cpi", "jobs report",
-        "treasury yields", "federal reserve", "tasas de interés",
-    ),
-}
-
-# Categorías "duras": cuentan como catalizador confirmado.
-HARD_CATEGORIES: Tuple[str, ...] = (
-    "earnings", "guidance", "fda", "contracts", "m_and_a", "regulation",
-    "upgrade_downgrade", "price_target", "new_product", "agreements",
-    "litigation", "financing",
-)
-
-CATEGORY_LABELS_ES: Dict[str, str] = {
-    "earnings": "Resultados (earnings)",
-    "guidance": "Guidance / previsiones",
-    "fda": "FDA / biotecnología",
-    "contracts": "Contratos",
-    "m_and_a": "Fusiones y adquisiciones",
-    "regulation": "Regulación",
-    "upgrade_downgrade": "Cambio de recomendación",
-    "price_target": "Precio objetivo",
-    "new_product": "Nuevo producto",
-    "agreements": "Acuerdos",
-    "litigation": "Litigios",
-    "financing": "Financiación / recompras",
-    "insiders": "Insiders",
-    "sector": "Noticia sectorial",
-    "macro_fed": "Macro / Fed",
-    "other": "Otros",
-}
-
-
-@dataclass(frozen=True)
-class NewsConfig:
-    """Parámetros de noticias."""
-
-    catalyst_window_hours: int = 48
-    recent_hours_boost: int = 12
-    max_tickers: int = 40
-    pause_seconds: float = 0.3
-    max_items_per_ticker: int = 8
-
-
-NEWS = NewsConfig()
-
-
-# --------------------------------------------------------------------------
-# Contexto de mercado
-# --------------------------------------------------------------------------
-@dataclass(frozen=True)
-class ContextConfig:
-    """Símbolos usados para el contexto de mercado."""
-
-    indices: Tuple[str, ...] = ("SPY", "QQQ", "DIA")
-    volatility: str = "^VIX"
-    futures: Tuple[str, ...] = ("ES=F", "NQ=F")
-    treasury_10y: str = "^TNX"
-    sector_etfs: Tuple[str, ...] = (
-        "XLK", "XLF", "XLE", "XLV", "XLY", "XLP",
-        "XLI", "XLB", "XLU", "XLRE", "XLC",
-    )
-
-
-CONTEXT = ContextConfig()
-
-
-# --------------------------------------------------------------------------
+# (Las palabras clave, categorías y NewsConfig activos están más abajo, junto
+# a MarketContextConfig: NEWS_CATEGORY_KEYWORDS, NEWS_CATEGORY_LABELS y NEWS.)
 # Gemini y Telegram
 # --------------------------------------------------------------------------
 

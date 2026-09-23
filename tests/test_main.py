@@ -16,13 +16,30 @@ Dos cuidados que ya causaron un cuelgue real en esta suite:
    Por eso los tests que fijan una hora "dentro de la ventana" pasan
    siempre --no-wait, aparte de usar el stub.
 """
+from dataclasses import replace as _dc_replace
 from datetime import datetime
 
 import pytest
 from openpyxl import Workbook
 
+import config
 import main
 import utils
+
+
+@pytest.fixture(autouse=True)
+def _historial_aislado(tmp_path, monkeypatch):
+    """Aísla config.PATHS.history_dir a un directorio temporal para cada test.
+
+    Sin esto, test_idempotencia_si_ya_se_envio escribe un histórico real en
+    ``data/history/2026-09-21.json`` que nunca se limpia; una ejecución
+    posterior de la suite (incluso en otra sesión de pytest) hereda ese
+    archivo y test_guarda_horaria_dentro_de_ventana falla creyendo que el
+    informe de ese día ya se había enviado. ``Paths`` es un dataclass
+    congelado, así que se sustituye el objeto entero en vez de mutar un
+    campo.
+    """
+    monkeypatch.setattr(config, "PATHS", _dc_replace(config.PATHS, history_dir=tmp_path / "history"))
 
 
 def make_universe(path, tickers):

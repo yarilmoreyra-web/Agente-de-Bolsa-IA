@@ -11,7 +11,7 @@ Cronograma que sigue ``run_pipeline`` (hora de Nueva York):
     08:35-08:45  universo, datos diarios, barras 5m históricas y contexto de mercado
     08:45        snapshot pre-market (``SCHEDULE.snapshot_time``)
     08:45-08:57  indicadores, pre-filtro, noticias, filtro, Gemini y validación
-    09:00        envío del informe (Fase 5)
+    09:00        informe, envío por Telegram e histórico
 
 Códigos de salida: 0 = correcto (incluye "hoy no toca ejecutar"),
 1 = error de configuración o de datos, 2 = función aún no disponible.
@@ -29,10 +29,13 @@ from typing import Any, Optional, Sequence
 import candidate_filter
 import config
 import gemini_analyzer
+import history as history_module
 import market_context as market_context_module
 import market_data
 import news as news_module
+import report as report_module
 import technical_analysis
+import telegram as telegram_module
 import utils
 
 logger = logging.getLogger("trading_agent.main")
@@ -152,7 +155,7 @@ def run_pipeline(
     Pasos: datos diarios y barras 5m históricas → contexto de mercado →
     snapshot pre-market → indicadores → pre-filtro → noticias → filtro →
     Gemini → validación. El diccionario resultante es la materia prima del
-    informe, del histórico (Fase 5) y del backtest.
+    informe (``report.py``), del histórico (``history.py``) y del futuro backtest.
 
     Ningún fallo aislado detiene el proceso: los tickers que no se puedan
     descargar o analizar quedan registrados en ``failures``.
@@ -279,7 +282,7 @@ def run_pipeline(
 
 
 def print_provisional_summary(result: dict[str, Any]) -> None:
-    """Resumen por consola mientras el informe formal llega en la Fase 5."""
+    """Resumen rápido por consola. El informe formal lo genera ``report.py``."""
     print("\n" + "=" * 70)
     print(f"RESUMEN PROVISIONAL — {result['session_date']} ({result['session_type']})")
     print(f"Snapshot: {result['snapshot_ts'][11:16]} ET | "
@@ -315,8 +318,6 @@ def print_provisional_summary(result: dict[str, Any]) -> None:
 
     print("-" * 70)
     print(DISCLAIMER)
-    print("El informe con formato, el envío por Telegram y el histórico "
-          "se añaden en la Fase 5.")
     print("=" * 70)
 
 
@@ -457,11 +458,80 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print("AVISO: no hay GEMINI_API_KEY; el informe sale solo con datos de Python.")
 
     print_provisional_summary(result)
-    logger.info(
-        "Fin. candidatas=%s picks=%d",
-        result["candidates"], len(result["gemini"].get("picks", [])),
+
+    # 6) Informe, espera hasta la hora de envío, Telegram e histórico --------
+    markdown_report = report_module.build_markdown(result)
+
+    if args.dry_run:
+        print("\n" + "=" * 70)
+        print("INFORME (--dry-run: no se envía a Telegram ni se guarda histórico)")
+        print("=" * 70)
+        print(markdown_report)
+        logger.info("dry-run: informe generado pero no enviado ni guardado.")
+        return 0
+
+    report_module.save_markdown(markdown_report, target)
+
+    if not args.no_wait:
+        wait_until(schedule.report_time, target)
+
+    sent = False
+    telegram_error = ""
+    telegram_attempted = False
+    if args.no_telegram:
+        print("Telegram desactivado (--no-telegram): el informe no se envía.")
+        telegram_error = "envío desactivado con --no-telegram"
+    elif not env.telegram_enabled:
+        print(
+            "AVISO: faltan TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID; "
+            "no se puede enviar el informe."
+        )
+        telegram_error = "faltan credenciales de Telegram"
+    else:
+        telegram_attempted = True
+        html_text = report_module.markdown_to_telegram_html(markdown_report)
+        send_result = telegram_module.send_report(html_text, env)
+        if send_result.ok:
+            sent = True
+            print(f"Informe enviado a Telegram ({send_result.parts_sent} mensaje(s)).")
+            logger.info("Telegram: envío correcto (%d mensajes).", send_result.parts_sent)
+        else:
+            telegram_error = send_result.error
+            print(f"ERROR al enviar a Telegram: {send_result.error}")
+            logger.error("Telegram: fallo en el envío: %s", send_result.error)
+
+    gemini_data = result.get("gemini") or {}
+    history_record = history_module.HistoryRecord(
+        date=target,
+        universe={"count": result.get("universe_size", 0), "source": str(universe_path)},
+        context=result.get("market_context") or {},
+        candidates=result.get("candidates_payload", []),
+        filter_log=result.get("filter_log", []),
+        gemini_raw=gemini_data.get("raw_response") or {},
+        gemini_validated=gemini_data,
+        final_selection=gemini_data.get("picks", []),
+        timestamps={
+            "snapshot": result.get("snapshot_ts"),
+            "started": result.get("started_at"),
+            "finished": result.get("finished_at"),
+        },
+        sources={"prices": "yfinance", "news": list((result.get("news") or {}).keys())},
+        no_trade=bool(result.get("no_trade", False)),
+        no_trade_reason=result.get("no_trade_reason", ""),
     )
-    return 0
+    history_module.save_history(history_record, config.PATHS.history_dir, config.PATHS.history_csv)
+    status = {"error": telegram_error} if telegram_error else {"ok": True}
+    history_module.update_send_status(
+        target, sent, status, config.PATHS.history_dir, config.PATHS.history_csv
+    )
+
+    logger.info(
+        "Fin. candidatas=%d picks=%d enviado=%s",
+        len(result.get("candidates") or []), len(gemini_data.get("picks", [])), sent,
+    )
+    # Con --no-telegram o sin credenciales, el envío se omite a propósito: no
+    # es un fallo. Solo se devuelve error si se intentó enviar y no se logró.
+    return 0 if sent or not telegram_attempted else 1
 
 
 if __name__ == "__main__":

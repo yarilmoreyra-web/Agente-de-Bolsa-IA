@@ -13,3 +13,5 @@ logs/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+data/history.csv
+data/reports/2026-09-21.md

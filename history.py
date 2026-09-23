@@ -1,365 +1,433 @@
-"""history.py — Histórico diario (JSON) y tabla plana (CSV) de candidatas.
+"""Histórico de ejecuciones: un JSON enriquecido por día y un CSV acumulado.
 
-* ``data/history/YYYY-MM-DD.json``: todo lo necesario para auditar el día (universo,
-  datos de mercado, indicadores, catalizadores, ``filter_log``, candidatas, respuesta
-  cruda y validada de Gemini, selección final, marcas de tiempo, fuentes y estado de
-  envío). La clave ``sent`` está en el nivel superior porque ``utils.already_sent`` la
-  lee para la idempotencia.
-* ``data/history.csv``: una fila por candidata y día, con columnas planas. Reejecutar la
-  misma fecha **reemplaza** las filas de ese día (nunca las duplica).
+El JSON diario (``data/history/AAAA-MM-DD.json``) guarda todo lo que produjo
+la sesión (universo, contexto de mercado, candidatas con sus indicadores y
+catalizadores, log del filtro, respuesta cruda y validada de Gemini,
+selección final, timestamps y fuentes) más el resultado del envío a
+Telegram. El campo ``sent`` es el que usa ``utils.already_sent`` para no
+repetir un informe ya entregado.
 
-Este módulo también contiene los accesores que comparten ``report.py`` y
-``backtest.py`` para leer candidatas y picks sin depender de una forma exacta.
+El CSV (``data/history.csv``) tiene una fila por candidata (ninguna si no
+hubo candidatas ese día) y sirve para revisar el histórico rápidamente sin
+abrir cada JSON.
 
-Contrato de datos que se espera (claves que se leen)
-----------------------------------------------------
-Candidata (``candidates[i]``): ``ticker``, ``score`` (o ``score_detail.total``),
-``direction``, ``record`` (registro de ``technical_analysis.analyze_ticker``),
-``news`` (con ``catalyst_confirmed`` y ``catalyst_text``) y ``score_detail.flags``.
-Pick validado (``final_selection[i]``): los campos del esquema de Gemini más los que
-calcula Python: ``rr`` (R/R) y ``max_entry_price`` (precio máximo de entrada válido).
+Guardar el histórico y marcar el envío son dos pasos separados a propósito
+(``save_history`` y luego ``update_send_status``): así el histórico queda
+guardado aunque el envío a Telegram falle o el proceso se interrumpa antes.
 """
 from __future__ import annotations
 
 import csv
-import dataclasses
 import logging
-import os
-import tempfile
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from datetime import date, datetime
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import config
-from technical_analysis import NA, is_num
-from utils import now_ny, read_json, write_json_atomic
+import utils
 
 logger = logging.getLogger("trading_agent.history")
 
-# Nombres alternativos aceptados para los campos que calcula Python en cada pick.
-PICK_ALIASES: dict[str, tuple[str, ...]] = {
-    "rr": ("rr", "risk_reward", "r_r", "rr_ratio"),
-    "max_entry_price": ("max_entry_price", "max_entry", "max_valid_entry",
-                        "precio_maximo_entrada"),
-}
-
+# Columnas del CSV acumulado: una fila por candidata y día.
 CSV_COLUMNS = [
-    "date", "ticker", "rank", "direction", "score", "selected", "decision", "confidence",
-    "catalyst_confirmed", "catalyst", "premarket_quality", "prev_close", "premarket_price",
-    "gap_pct", "premarket_volume", "rvol", "pm_pct_of_adv", "rsi14", "sma20", "sma50",
-    "atr14", "atr_pct", "rs_pm_vs_spy", "rs_pm_vs_qqq", "fade_flags", "fade_risk",
-    "entry_low", "entry_high", "stop", "target_1", "target_2", "rr", "max_entry_price",
-    "sent",
+    "date", "ticker", "rank", "score", "selected", "decision", "rr",
+    "max_entry_price", "stop", "gap_pct", "rvol", "premarket_quality",
+    "fade_flags", "catalyst_confirmed", "rs_pm_vs_spy", "sent",
 ]
 
+# Alias conocidos para acceder a los campos de un "pick" con distintos
+# nombres, según de dónde venga (Gemini, Python, versiones antiguas).
+_PICK_FIELD_ALIASES: Dict[str, Tuple[str, ...]] = {
+    "rr": ("rr", "risk_reward"),
+    "max_entry_price": ("max_entry_price", "max_entry"),
+}
+
+
+def history_path(session_date: date, history_dir: Optional[Path] = None) -> Path:
+    """Ruta del histórico JSON de una fecha."""
+    base = Path(history_dir) if history_dir is not None else config.PATHS.history_dir
+    return base / f"{session_date.isoformat()}.json"
+
+
+@dataclass
+class HistoryRecord:
+    """Lo que se guarda en el histórico de un día.
+
+    ``candidates`` es la lista de candidatas tal y como las produce
+    ``candidate_filter.candidates_payload`` (cada una con su análisis técnico
+    y sus noticias). ``final_selection`` es la lista de picks ya validados
+    (los que de verdad entran en el informe).
+    """
+
+    date: date
+    universe: Dict[str, Any] = field(default_factory=dict)
+    context: Dict[str, Any] = field(default_factory=dict)
+    candidates: List[Dict[str, Any]] = field(default_factory=list)
+    filter_log: List[Dict[str, Any]] = field(default_factory=list)
+    gemini_raw: Dict[str, Any] = field(default_factory=dict)
+    gemini_validated: Dict[str, Any] = field(default_factory=dict)
+    final_selection: List[Dict[str, Any]] = field(default_factory=list)
+    timestamps: Dict[str, Any] = field(default_factory=dict)
+    sources: Dict[str, Any] = field(default_factory=dict)
+    no_trade: bool = False
+    no_trade_reason: str = ""
+
 
 # --------------------------------------------------------------------------- #
-# Accesores compartidos
+# Accesores defensivos (una candidata puede venir de distintos productores)
 # --------------------------------------------------------------------------- #
-def to_plain(obj: Any) -> Any:
-    """Convierte dataclasses y objetos con ``to_dict`` en diccionarios y listas."""
-    if obj is None or isinstance(obj, (str, int, float, bool)):
-        return obj
-    if hasattr(obj, "to_dict") and callable(obj.to_dict):
-        return to_plain(obj.to_dict())
-    if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
-        return to_plain(dataclasses.asdict(obj))
-    if isinstance(obj, Mapping):
-        return {str(k): to_plain(v) for k, v in obj.items()}
-    if isinstance(obj, (list, tuple, set)):
-        return [to_plain(v) for v in obj]
-    return obj
+def analysis_record(candidate: Any) -> Any:
+    """Devuelve el registro analítico (indicadores, pre-market, niveles...) de una candidata.
 
-
-def analysis_record(candidate: Any) -> Mapping[str, Any]:
-    """Registro de ``analyze_ticker`` de una candidata (``candidate["record"]``)."""
-    if not isinstance(candidate, Mapping):
+    Acepta la candidata completa (con clave ``record`` o, en el payload real
+    de ``candidate_filter``, ``analysis``) o directamente el propio registro
+    analítico, que se devuelve tal cual. Cualquier otra cosa da ``{}``.
+    """
+    if not isinstance(candidate, dict):
         return {}
-    record = candidate.get("record")
-    if isinstance(record, Mapping):
-        return record
-    if "premarket" in candidate or "indicators" in candidate:
-        return candidate
-    return {}
+    for key in ("record", "analysis"):
+        value = candidate.get(key)
+        if isinstance(value, dict):
+            return value
+    return candidate
 
 
-def candidate_score(candidate: Mapping[str, Any]) -> float | str:
-    """Puntuación de una candidata (``score`` o ``score_detail.total``)."""
-    for value in (candidate.get("score"), (candidate.get("score_detail") or {}).get("total")):
-        if is_num(value):
-            return float(value)
-    return NA
+def candidate_score(candidate: Any) -> Any:
+    """Puntuación de una candidata (``score``, o el total de su desglose); "N/A" si no hay."""
+    if not isinstance(candidate, dict):
+        return "N/A"
+    score = candidate.get("score")
+    if isinstance(score, (int, float)):
+        return score
+    for key in ("score_detail", "score_breakdown"):
+        detail = candidate.get(key)
+        if isinstance(detail, dict) and isinstance(detail.get("total"), (int, float)):
+            return detail["total"]
+    return "N/A"
 
 
-def pick_field(pick: Mapping[str, Any], name: str) -> Any:
-    """Valor de un campo de un pick, aceptando los nombres alternativos de ``PICK_ALIASES``."""
-    for key in PICK_ALIASES.get(name, (name,)):
-        if key in pick and pick[key] is not None:
-            return pick[key]
-    return NA
-
-
-def find_level(record: Mapping[str, Any], label: Any) -> dict[str, Any] | None:
-    """Fila de la tabla de niveles con esa etiqueta (None si no existe)."""
-    if not isinstance(label, str):
+def find_level(record: Any, level_name: str) -> Any:
+    """Busca en ``record['levels']`` el nivel técnico con esa etiqueta (soporte/resistencia)."""
+    if not isinstance(record, dict):
         return None
-    for row in record.get("levels", []) or []:
-        if isinstance(row, Mapping) and row.get("label") == label:
-            return dict(row)
+    levels = record.get("levels")
+    if isinstance(levels, dict):
+        return levels.get(level_name)
+    if isinstance(levels, (list, tuple)):
+        for level in levels:
+            if isinstance(level, dict) and level.get("label") == level_name:
+                return level
     return None
 
 
-def _get(mapping: Any, *path: str) -> Any:
-    """Acceso anidado tolerante: devuelve ``"N/A"`` si falta cualquier eslabón."""
-    current: Any = mapping
-    for key in path:
-        if not isinstance(current, Mapping) or key not in current or current[key] is None:
-            return NA
-        current = current[key]
-    return current
+def pick_field(pick: Any, key: str, default: Any = "N/A") -> Any:
+    """Busca ``key`` en un pick probando alias conocidos (p.ej. ``rr``/``risk_reward``)."""
+    if not isinstance(pick, dict):
+        return default
+    for alias in _PICK_FIELD_ALIASES.get(key, (key,)):
+        if alias in pick and pick[alias] is not None:
+            return pick[alias]
+    return default
+
+
+def to_plain(obj: Any) -> Any:
+    """Convierte dataclasses, objetos con ``to_dict()`` y estructuras anidadas a tipos nativos.
+
+    Necesario antes de guardar en JSON: las candidatas o las noticias pueden
+    llegar como dataclasses (p.ej. ``TickerNews``) en lugar de dicts.
+    """
+    to_dict = getattr(obj, "to_dict", None)
+    if callable(to_dict):
+        return to_plain(to_dict())
+    if hasattr(obj, "__dataclass_fields__"):
+        return to_plain(asdict(obj))
+    if isinstance(obj, dict):
+        return {key: to_plain(value) for key, value in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [to_plain(item) for item in obj]
+    return obj
 
 
 # --------------------------------------------------------------------------- #
-# Escritura atómica de texto y CSV
+# Guardado del histórico (JSON + CSV)
 # --------------------------------------------------------------------------- #
-def write_text_atomic(path: Path, text: str) -> None:
-    """Escribe un archivo de texto de forma segura (temporal + reemplazo)."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), prefix=path.name + ".", suffix=".tmp")
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="") as handle:
-            handle.write(text)
-        os.replace(tmp_name, path)
-    except Exception:
+def _derive_market_data(
+    candidates: List[Dict[str, Any]], context: Dict[str, Any]
+) -> Tuple[Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
+    """A partir de las candidatas, separa pre-market/indicadores/catalizadores por ticker."""
+    premarket: Dict[str, Any] = {}
+    indicators: Dict[str, Any] = {}
+    catalysts: Dict[str, Any] = {}
+    for candidate in candidates or []:
+        if not isinstance(candidate, dict):
+            continue
+        ticker = candidate.get("ticker")
+        if not ticker:
+            continue
+        record = analysis_record(candidate)
+        premarket[ticker] = record.get("premarket", {}) if isinstance(record, dict) else {}
+        indicators[ticker] = record.get("indicators", {}) if isinstance(record, dict) else {}
+        catalysts[ticker] = candidate.get("news", {})
+    return {"premarket": premarket, "context": context}, indicators, catalysts
+
+
+def _next_run_count(path: Path) -> int:
+    """Cuántas veces se ha guardado ya el histórico de esta fecha (para incrementarlo)."""
+    previous = utils.read_json(path)
+    if isinstance(previous, dict):
         try:
-            os.unlink(tmp_name)
-        except FileNotFoundError:
-            pass
-        raise
+            return int(previous.get("run_count", 0)) + 1
+        except (TypeError, ValueError):
+            return 1
+    return 1
 
 
-def _csv_cell(value: Any) -> Any:
-    if value is None:
-        return NA
+def save_history(
+    record: HistoryRecord,
+    history_dir: Optional[Path] = None,
+    csv_path: Optional[Path] = None,
+) -> Path:
+    """Guarda (o sobrescribe) el histórico JSON del día y actualiza el CSV acumulado.
+
+    Es seguro llamarla varias veces para la misma fecha (por ejemplo al
+    reintentar con ``--force``): el JSON se sobrescribe incrementando
+    ``run_count``, y en el CSV se reemplazan solo las filas de esa fecha.
+    ``sent`` empieza siempre en ``False``; se marca aparte con
+    ``update_send_status`` una vez se sabe si el envío a Telegram funcionó.
+    """
+    history_dir = Path(history_dir) if history_dir is not None else config.PATHS.history_dir
+    csv_path = Path(csv_path) if csv_path is not None else config.PATHS.history_csv
+
+    session_date = record.date
+    if isinstance(session_date, datetime):
+        session_date = session_date.date()
+
+    path = history_path(session_date, history_dir)
+    run_count = _next_run_count(path)
+    market_data, indicators, catalysts = _derive_market_data(record.candidates, record.context)
+
+    payload: Dict[str, Any] = {
+        "date": session_date,
+        "universe": record.universe,
+        "market_data": market_data,
+        "indicators": indicators,
+        "catalysts": catalysts,
+        "filter_log": record.filter_log,
+        "candidates": record.candidates,
+        "gemini_raw": record.gemini_raw,
+        "gemini_validated": record.gemini_validated,
+        "final_selection": record.final_selection,
+        "timestamps": record.timestamps,
+        "sources": record.sources,
+        "no_trade": record.no_trade,
+        "no_trade_reason": record.no_trade_reason,
+        "sent": False,
+        "send_status": None,
+        "run_count": run_count,
+    }
+    payload = to_plain(payload)
+    utils.write_json_atomic(path, payload)
+    logger.info("Histórico guardado en %s (run_count=%d).", path, run_count)
+
+    rows = _rows_for_date(record.candidates, record.final_selection, session_date, sent=False)
+    _rewrite_csv(csv_path, session_date, rows)
+    return path
+
+
+def load_history(session_date: date, history_dir: Optional[Path] = None) -> Any:
+    """Lee el histórico JSON de una fecha (o ``None`` si no existe o está corrupto)."""
+    base = Path(history_dir) if history_dir is not None else config.PATHS.history_dir
+    return utils.read_json(history_path(session_date, base))
+
+
+def update_send_status(
+    session_date: date,
+    sent: bool,
+    status: Optional[Dict[str, Any]] = None,
+    history_dir: Optional[Path] = None,
+    csv_path: Optional[Path] = None,
+) -> bool:
+    """Marca en el histórico (JSON y CSV) el resultado del envío a Telegram.
+
+    Devuelve ``True`` si había histórico de esa fecha y se actualizó;
+    ``False`` (con un aviso en el log) si no existía nada que actualizar.
+    """
+    history_dir = Path(history_dir) if history_dir is not None else config.PATHS.history_dir
+    csv_path = Path(csv_path) if csv_path is not None else config.PATHS.history_csv
+
+    path = history_path(session_date, history_dir)
+    data = utils.read_json(path)
+    if not isinstance(data, dict):
+        logger.warning(
+            "No se pudo actualizar el estado de envío: no hay histórico para %s.",
+            session_date,
+        )
+        return False
+
+    data["sent"] = bool(sent)
+    data["send_status"] = status if status is not None else data.get("send_status")
+    timestamps = data.get("timestamps")
+    if not isinstance(timestamps, dict):
+        timestamps = {}
+    if sent:
+        timestamps["sent"] = utils.now_ny().isoformat()
+    data["timestamps"] = timestamps
+
+    utils.write_json_atomic(path, data)
+    logger.info("Estado de envío actualizado para %s: sent=%s.", session_date, sent)
+
+    _update_csv_sent_column(csv_path, session_date, sent)
+    return True
+
+
+# --------------------------------------------------------------------------- #
+# CSV acumulado
+# --------------------------------------------------------------------------- #
+def _fmt_csv(value: Any) -> str:
+    """Formatea un valor para una celda de CSV: bools en minúsculas, ``N/A`` si falta."""
+    if value is None or value == "N/A":
+        return "N/A"
     if isinstance(value, bool):
         return "true" if value else "false"
-    if isinstance(value, float):
-        return NA if value != value or value in (float("inf"), float("-inf")) else value
-    return value
+    return str(value)
 
 
-def upsert_csv_rows(
-    path: Path, rows: Sequence[Mapping[str, Any]], columns: Sequence[str],
-    date_key: str = "date", replace_dates: Sequence[str] = (),
-) -> int:
-    """Añade filas a un CSV reemplazando las de las mismas fechas (sin duplicar).
-
-    Se reemplazan las filas existentes de las fechas de ``rows`` y de ``replace_dates``
-    (útil cuando una reejecución ya no produce ninguna fila para esa fecha). Conserva las
-    filas de otras fechas y las columnas extra que ya tuviera el archivo. Devuelve el
-    número total de filas escritas.
-    """
-    existing: list[dict[str, str]] = []
-    extra_columns: list[str] = []
-    if path.exists():
-        try:
-            with open(path, "r", encoding="utf-8", newline="") as handle:
-                reader = csv.DictReader(handle)
-                extra_columns = [c for c in (reader.fieldnames or []) if c not in columns]
-                existing = [dict(row) for row in reader]
-        except (OSError, csv.Error) as exc:
-            logger.warning("No se pudo leer %s (%s); se recreará", path, exc)
-
-    new_dates = {str(row.get(date_key)) for row in rows} | {str(d) for d in replace_dates}
-    kept = [row for row in existing if row.get(date_key) not in new_dates]
-    fieldnames = [*columns, *extra_columns]
-
-    import io  # noqa: PLC0415 - solo aquí
-
-    buffer = io.StringIO(newline="")
-    writer = csv.DictWriter(buffer, fieldnames=fieldnames, extrasaction="ignore",
-                            lineterminator="\n")
-    writer.writeheader()
-    for row in kept:
-        writer.writerow({k: row.get(k, "") for k in fieldnames})
-    for row in rows:
-        writer.writerow({k: _csv_cell(row.get(k, NA)) for k in fieldnames})
-    write_text_atomic(path, buffer.getvalue())
-    return len(kept) + len(rows)
+def _score_sort_key(candidate: Mapping[str, Any]) -> float:
+    score = candidate_score(candidate)
+    return score if isinstance(score, (int, float)) else float("-inf")
 
 
-# --------------------------------------------------------------------------- #
-# Registro del día
-# --------------------------------------------------------------------------- #
-@dataclass
-class HistoryRecord:
-    """Contenido del histórico de un día (ver el docstring del módulo)."""
+def _rows_for_date(
+    candidates: List[Dict[str, Any]],
+    final_selection: List[Dict[str, Any]],
+    session_date: date,
+    sent: bool,
+) -> List[Dict[str, str]]:
+    """Una fila de CSV por candidata, ordenadas por puntuación descendente."""
+    picks_by_ticker = {
+        pick.get("ticker"): pick
+        for pick in (final_selection or [])
+        if isinstance(pick, dict) and pick.get("ticker")
+    }
+    ordered = sorted(
+        (c for c in (candidates or []) if isinstance(c, dict) and c.get("ticker")),
+        key=_score_sort_key,
+        reverse=True,
+    )
 
-    date: date
-    session_type: str = "sesión normal"
-    universe: Mapping[str, Any] = field(default_factory=dict)
-    context: Mapping[str, Any] | None = None
-    candidates: Sequence[Mapping[str, Any]] = field(default_factory=list)
-    filter_log: Sequence[Mapping[str, Any]] = field(default_factory=list)
-    gemini_raw: Any = None
-    gemini_validated: Mapping[str, Any] | None = None
-    final_selection: Sequence[Mapping[str, Any]] = field(default_factory=list)
-    no_trade: bool = False
-    no_trade_reason: str = ""
-    timestamps: Mapping[str, Any] = field(default_factory=dict)
-    sources: Mapping[str, Any] = field(default_factory=dict)
-    sent: bool = False
-    send_status: Mapping[str, Any] = field(default_factory=dict)
-    report_path: str = ""
+    rows: List[Dict[str, str]] = []
+    for rank, candidate in enumerate(ordered, start=1):
+        ticker = candidate["ticker"]
+        record = analysis_record(candidate)
+        pick = picks_by_ticker.get(ticker)
+        selected = ticker in picks_by_ticker
 
-    def to_dict(self) -> dict[str, Any]:
-        """Diccionario con las claves del histórico (indicadores y catalizadores derivados)."""
-        candidates = to_plain(list(self.candidates))
-        indicators: dict[str, Any] = {}
-        premarket: dict[str, Any] = {}
-        catalysts: dict[str, Any] = {}
-        for cand in candidates:
-            ticker = cand.get("ticker")
-            if not ticker:
-                continue
-            record = analysis_record(cand)
-            indicators[ticker] = record.get("indicators", {})
-            premarket[ticker] = record.get("premarket", {})
-            news = cand.get("news") or {}
-            catalysts[ticker] = {
-                "catalyst_confirmed": news.get("catalyst_confirmed", NA),
-                "catalyst_text": news.get("catalyst_text", NA),
-                "catalyst": news.get("catalyst"),
-                "sources": news.get("sources", []),
-            }
-        return {
-            "date": self.date.isoformat(),
-            "session_type": self.session_type,
-            "universe": to_plain(self.universe),
-            "market_data": {"context": to_plain(self.context), "premarket": premarket},
-            "indicators": indicators,
-            "catalysts": catalysts,
-            "filter_log": to_plain(list(self.filter_log)),
-            "candidates": candidates,
-            "gemini_raw": to_plain(self.gemini_raw),
-            "gemini_validated": to_plain(self.gemini_validated),
-            "final_selection": to_plain(list(self.final_selection)),
-            "no_trade": self.no_trade,
-            "no_trade_reason": self.no_trade_reason,
-            "timestamps": to_plain(self.timestamps),
-            "sources": to_plain(self.sources),
-            "sent": bool(self.sent),
-            "send_status": to_plain(self.send_status),
-            "report_path": self.report_path,
-            "run_count": 1,
-        }
+        premarket = record.get("premarket", {}) if isinstance(record, dict) else {}
+        rvol_info = record.get("rvol") if isinstance(record, dict) else None
+        rvol_value = rvol_info.get("rvol") if isinstance(rvol_info, dict) else rvol_info
+        rs_info = record.get("relative_strength") if isinstance(record, dict) else None
+        rs_value = rs_info.get("rs_pm_vs_spy") if isinstance(rs_info, dict) else None
 
+        flags: List[str] = []
+        for key in ("score_detail", "score_breakdown"):
+            detail = candidate.get(key)
+            if isinstance(detail, dict) and isinstance(detail.get("flags"), (list, tuple)):
+                flags = [str(flag) for flag in detail["flags"]]
+                break
 
-def history_path(target: date, history_dir: Path | None = None) -> Path:
-    """Ruta del JSON de histórico de una fecha."""
-    return (history_dir or config.PATHS.history_dir) / f"{target.isoformat()}.json"
+        news = to_plain(candidate.get("news")) or {}
+        news = news if isinstance(news, dict) else {}
 
-
-def load_history(target: date, history_dir: Path | None = None) -> dict[str, Any] | None:
-    """Lee el histórico de una fecha (None si no existe o está corrupto)."""
-    data = read_json(history_path(target, history_dir), default=None)
-    return data if isinstance(data, dict) else None
-
-
-def candidate_rows(record: Mapping[str, Any]) -> list[dict[str, Any]]:
-    """Filas planas del CSV (una por candidata) a partir del dict del histórico."""
-    picks = {p.get("ticker"): p for p in record.get("final_selection", []) or []
-             if isinstance(p, Mapping)}
-    rows: list[dict[str, Any]] = []
-    for index, cand in enumerate(record.get("candidates", []) or [], start=1):
-        if not isinstance(cand, Mapping) or not cand.get("ticker"):
-            continue
-        ticker = cand["ticker"]
-        rec = analysis_record(cand)
-        pick = picks.get(ticker, {})
-        news = cand.get("news") or {}
-        flags = _get(cand, "score_detail", "flags")
         rows.append({
-            "date": record.get("date"), "ticker": ticker, "rank": index,
-            "direction": cand.get("direction") or pick.get("direction") or NA,
-            "score": candidate_score(cand),
-            "selected": ticker in picks,
-            "decision": pick.get("decision", NA), "confidence": pick.get("confidence", NA),
-            "catalyst_confirmed": news.get("catalyst_confirmed", NA),
-            "catalyst": news.get("catalyst_text", NA),
-            "premarket_quality": _get(rec, "premarket", "premarket_quality"),
-            "prev_close": _get(rec, "premarket", "prev_close"),
-            "premarket_price": _get(rec, "premarket", "premarket_price"),
-            "gap_pct": _get(rec, "gap_pct"),
-            "premarket_volume": _get(rec, "premarket", "premarket_volume"),
-            "rvol": _get(rec, "rvol", "rvol"),
-            "pm_pct_of_adv": _get(rec, "pm_pct_of_adv"),
-            "rsi14": _get(rec, "indicators", "rsi14"),
-            "sma20": _get(rec, "indicators", "sma20"),
-            "sma50": _get(rec, "indicators", "sma50"),
-            "atr14": _get(rec, "indicators", "atr14"),
-            "atr_pct": _get(rec, "indicators", "atr_pct"),
-            "rs_pm_vs_spy": _get(rec, "relative_strength", "rs_pm_vs_spy"),
-            "rs_pm_vs_qqq": _get(rec, "relative_strength", "rs_pm_vs_qqq"),
-            "fade_flags": "|".join(flags) if isinstance(flags, list) else NA,
-            "fade_risk": pick.get("fade_risk", NA),
-            "entry_low": pick.get("entry_zone_low", NA),
-            "entry_high": pick.get("entry_zone_high", NA),
-            "stop": pick.get("stop", NA),
-            "target_1": pick.get("target_1", NA), "target_2": pick.get("target_2", NA),
-            "rr": pick_field(pick, "rr"),
-            "max_entry_price": pick_field(pick, "max_entry_price"),
-            "sent": bool(record.get("sent")),
+            "date": session_date.isoformat(),
+            "ticker": ticker,
+            "rank": str(rank),
+            "score": _fmt_csv(candidate_score(candidate)),
+            "selected": _fmt_csv(selected),
+            "decision": _fmt_csv(pick_field(pick, "decision")),
+            "rr": _fmt_csv(pick_field(pick, "rr")),
+            "max_entry_price": _fmt_csv(pick_field(pick, "max_entry_price")),
+            "stop": _fmt_csv(pick_field(pick, "stop")),
+            "gap_pct": _fmt_csv(record.get("gap_pct")) if isinstance(record, dict) else "N/A",
+            "rvol": _fmt_csv(rvol_value),
+            "premarket_quality": _fmt_csv(premarket.get("premarket_quality")),
+            "fade_flags": ";".join(flags) if flags else "N/A",
+            "catalyst_confirmed": _fmt_csv(bool(news.get("catalyst_confirmed"))),
+            "rs_pm_vs_spy": _fmt_csv(rs_value),
+            "sent": _fmt_csv(sent),
         })
     return rows
 
 
-def save_history(
-    record: HistoryRecord | Mapping[str, Any],
-    history_dir: Path | None = None, csv_path: Path | None = None,
-) -> Path:
-    """Guarda el JSON del día y actualiza ``history.csv`` sin duplicar filas.
-
-    Si ya existía un histórico de esa fecha (reejecución) se sobrescribe y se
-    incrementa ``run_count``. Devuelve la ruta del JSON.
+def upsert_csv_rows(
+    csv_path: Path,
+    rows: List[Dict[str, Any]],
+    columns: List[str],
+    replace_dates: Optional[List[str]] = None,
+    date_field: str = "date",
+) -> None:
+    """Reescribe un CSV reemplazando las filas cuyo ``date_field`` esté en
+    ``replace_dates`` por ``rows`` (nunca duplica). Añade columnas de
+    ``columns`` que falten y conserva cualquier columna extra ya presente en
+    el archivo. Con ``replace_dates=None`` se reemplaza por la fecha de cada
+    fila nueva individualmente. Usada por ``history.py`` y ``backtest.py``.
     """
-    data = record.to_dict() if isinstance(record, HistoryRecord) else dict(to_plain(record))
-    target = date.fromisoformat(str(data["date"]))
-    path = history_path(target, history_dir)
+    csv_path = Path(csv_path)
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    if replace_dates is not None:
+        replace_set = set(replace_dates)
+    else:
+        replace_set = {row.get(date_field) for row in rows if row.get(date_field)}
 
-    previous = read_json(path, default=None)
-    if isinstance(previous, dict):
-        data["run_count"] = int(previous.get("run_count", 1)) + 1
-    data.setdefault("run_count", 1)
-    data.setdefault("saved_at", now_ny().isoformat())
+    existing_fieldnames: List[str] = []
+    existing_rows: List[Dict[str, Any]] = []
+    if csv_path.is_file():
+        with open(csv_path, "r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            existing_fieldnames = list(reader.fieldnames or [])
+            existing_rows = [row for row in reader if row.get(date_field) not in replace_set]
 
-    write_json_atomic(path, data)
-    total = upsert_csv_rows(csv_path or config.PATHS.history_csv, candidate_rows(data),
-                            CSV_COLUMNS, replace_dates=[str(data["date"])])
-    logger.info("Histórico guardado en %s (%d filas en el CSV)", path, total)
-    return path
+    fieldnames = list(existing_fieldnames)
+    for column in columns:
+        if column not in fieldnames:
+            fieldnames.append(column)
+
+    all_rows = existing_rows + list(rows)
+    with open(csv_path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, restval="", extrasaction="ignore")
+        writer.writeheader()
+        for row in all_rows:
+            writer.writerow(row)
+    logger.info("CSV actualizado: %s", csv_path)
 
 
-def update_send_status(
-    target: date, sent: bool, detail: Mapping[str, Any] | None = None,
-    history_dir: Path | None = None, csv_path: Path | None = None,
-) -> bool:
-    """Actualiza ``sent`` (y el detalle del envío) de un histórico ya guardado.
+def _rewrite_csv(csv_path: Path, session_date: date, new_rows: List[Dict[str, str]]) -> None:
+    """Reescribe el CSV de historia reemplazando solo las filas de ``session_date``."""
+    upsert_csv_rows(csv_path, new_rows, CSV_COLUMNS, replace_dates=[session_date.isoformat()])
 
-    Devuelve False si no existe el histórico de esa fecha.
-    """
-    data = load_history(target, history_dir)
-    if data is None:
-        logger.warning("No hay histórico de %s para actualizar el estado de envío", target)
-        return False
-    data["sent"] = bool(sent)
-    data["send_status"] = to_plain(detail or {})
-    timestamps = dict(data.get("timestamps") or {})
-    if sent:
-        timestamps["sent"] = now_ny().isoformat()
-    data["timestamps"] = timestamps
-    write_json_atomic(history_path(target, history_dir), data)
-    upsert_csv_rows(csv_path or config.PATHS.history_csv, candidate_rows(data), CSV_COLUMNS,
-                    replace_dates=[str(data["date"])])
-    return True
+
+def _update_csv_sent_column(csv_path: Path, session_date: date, sent: bool) -> None:
+    """Actualiza la columna ``sent`` de todas las filas de ``session_date`` ya escritas."""
+    csv_path = Path(csv_path)
+    if not csv_path.is_file():
+        return
+    target = session_date.isoformat()
+    with open(csv_path, "r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = list(reader.fieldnames or [])
+        rows = list(reader)
+
+    changed = False
+    for row in rows:
+        if row.get("date") == target:
+            row["sent"] = "true" if sent else "false"
+            changed = True
+    if not changed:
+        return
+
+    with open(csv_path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, restval="")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
