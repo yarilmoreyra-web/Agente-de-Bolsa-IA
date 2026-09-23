@@ -2721,8 +2721,9 @@
   "final_selection": [],
   "timestamps": {
     "snapshot": "2026-09-22T09:30:00-04:00",
-    "started": "2026-09-22T21:58:40.986637-04:00",
-    "finished": "2026-09-22T21:59:35.171597-04:00"
+    "started": "2026-09-22T22:28:59.084744-04:00",
+    "finished": "2026-09-22T22:29:59.310829-04:00",
+    "sent": "2026-09-22T22:30:00.328740-04:00"
   },
   "sources": {
     "prices": "yfinance",
@@ -2730,9 +2731,9 @@
   },
   "no_trade": true,
   "no_trade_reason": "Ninguna acción del universo supera el filtro mínimo (catalizador, momentum, volumen y estructura). No se fuerza ninguna operación.",
-  "sent": false,
+  "sent": true,
   "send_status": {
-    "error": "Telegram: fallo tras 3 intentos: 'NoneType' object is not callable"
+    "ok": true
   },
-  "run_count": 1
+  "run_count": 2
 }
