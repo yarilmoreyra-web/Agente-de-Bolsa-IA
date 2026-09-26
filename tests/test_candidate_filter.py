@@ -83,7 +83,7 @@ def test_puerta_precio_minimo():
 
 
 def test_puerta_volumen_medio():
-    failures = cf.apply_hard_gates(make_analysis(avg_volume=500_000.0))
+    failures = cf.apply_hard_gates(make_analysis(avg_volume=300_000.0))
     assert any("volumen medio 20d" in f for f in failures)
 
 

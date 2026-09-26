@@ -546,12 +546,12 @@ class FilterWeights:
 class FilterPenalties:
     """Puntos que se restan por cada bandera de gap-and-fade."""
 
-    overextended: float = 10.0
-    fade_from_high: float = 8.0
-    resistance_too_close: float = 8.0
-    no_catalyst: float = 10.0
-    low_volume_for_gap: float = 8.0
-    market_against: float = 6.0
+    overextended: float = 8.0
+    fade_from_high: float = 6.0
+    resistance_too_close: float = 6.0
+    no_catalyst: float = 6.0
+    low_volume_for_gap: float = 6.0
+    market_against: float = 4.0
 
 
 @dataclass(frozen=True)
@@ -560,16 +560,16 @@ class FilterConfig:
 
     # --- Puertas duras (eliminan al ticker) ---
     min_price: float = 5.0
-    min_avg_volume_20d: float = 1_000_000.0
-    min_avg_dollar_volume_20d: float = 20_000_000.0
-    min_premarket_volume: float = 25_000.0
-    min_abs_gap_pct: float = 1.0
+    min_avg_volume_20d: float = 500_000.0
+    min_avg_dollar_volume_20d: float = 10_000_000.0
+    min_premarket_volume: float = 10_000.0
+    min_abs_gap_pct: float = 0.5
     # En "long_only" solo interesan los gaps al alza.
     require_positive_gap_long_only: bool = True
 
     # --- Pre-filtro barato, previo a pedir noticias ---
-    prefilter_abs_gap_pct: float = 0.8
-    prefilter_premarket_volume: float = 15_000.0
+    prefilter_abs_gap_pct: float = 0.4
+    prefilter_premarket_volume: float = 8_000.0
 
     # --- Escalas de puntuación (valor mínimo -> 0 puntos; objetivo -> máximo) ---
     rvol_floor: float = 1.0
@@ -582,7 +582,7 @@ class FilterConfig:
     dollar_volume_target: float = 200_000_000.0
     rs_floor: float = -0.5
     rs_target: float = 2.0
-    catalyst_soft_score: float = 0.35
+    catalyst_soft_score: float = 0.5
 
     # --- Estructura técnica (reparto interno del peso "technical") ---
     tech_above_sma20: float = 0.3
@@ -599,7 +599,7 @@ class FilterConfig:
     low_volume_rvol: float = 1.5
 
     # --- Selección ---
-    min_score: float = 40.0
+    min_score: float = 28.0
     min_candidates: int = 3
     max_candidates: int = 10
     target_candidates: int = 6

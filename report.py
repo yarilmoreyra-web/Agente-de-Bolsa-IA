@@ -63,6 +63,7 @@ class ReportData:
     filter_no_trade_reason: Optional[str] = None
     disclaimer: str = DISCLAIMER
     no_trade_reason: Optional[str] = None
+    filter_log: List[Dict[str, Any]] = field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -210,6 +211,64 @@ def _source_display(source: Any) -> str:
     if text.startswith("http://") or text.startswith("https://"):
         return f"[fuente]({text})"
     return text
+
+
+# --------------------------------------------------------------------------- #
+# Diagnóstico del filtro: por qué cada ticker quedó o no quedó dentro
+# --------------------------------------------------------------------------- #
+def _row_weakness(row: Dict[str, Any]) -> str:
+    """Explica en una frase el motivo principal de la puntuación de una fila
+    que sí pasó las puertas duras: la penalización más fuerte y/o el
+    componente más flojo del desglose."""
+    parts: List[str] = []
+    penalties = row.get("penalties") or []
+    if penalties:
+        worst = max(penalties, key=lambda p: p.get("points", 0))
+        parts.append(f"penalización: {worst.get('detail', 'N/A')} (-{fmt_num(worst.get('points'), 1)} pts)")
+    components = row.get("components") or {}
+    if components:
+        weakest_key, weakest = min(
+            components.items(), key=lambda kv: kv[1].get("ratio", 1.0)
+        )
+        if weakest.get("ratio", 1.0) < 0.5:
+            parts.append(f"punto débil: {weakest.get('detail', weakest_key)}")
+    return "; ".join(parts) if parts else "sin banderas relevantes"
+
+
+def _diagnostic_block(filter_log: List[Dict[str, Any]], limit: int = 6) -> str:
+    """Bloque de transparencia: qué tickers se analizaron, su puntuación y el
+    motivo exacto de inclusión/exclusión. Se muestra siempre (haya o no
+    candidatas) para que el informe nunca sea solo un veredicto sin detalle.
+    """
+    rows = filter_log or []
+    if not rows:
+        return ""
+    passed = [r for r in rows if r.get("passed_gates")]
+    failed = [r for r in rows if not r.get("passed_gates")]
+    passed_sorted = sorted(
+        passed, key=lambda r: float(r.get("score") or 0.0), reverse=True
+    )
+
+    lines: List[str] = ["🔍 **DIAGNÓSTICO DEL FILTRO**"]
+    if passed_sorted:
+        lines.append(f"Puntuadas ({len(passed_sorted)} de {len(rows)} analizadas), de mayor a menor:")
+        for row in passed_sorted[:limit]:
+            ticker = row.get("ticker", "N/A")
+            score = fmt_num(row.get("score"), 1)
+            tag = " ✅ seleccionada" if row.get("selected") else ""
+            reason = row.get("exclusion_reason") or _row_weakness(row)
+            lines.append(f"• {ticker} — {score} pts{tag}. {reason}")
+        if len(passed_sorted) > limit:
+            lines.append(f"… y {len(passed_sorted) - limit} más puntuadas por debajo de estas.")
+    remaining_slots = max(0, limit - len(passed_sorted[:limit]))
+    if failed and (not passed_sorted or remaining_slots > 0):
+        show = failed[:max(remaining_slots, 3)]
+        lines.append("Descartadas en puertas duras (no llegaron a puntuarse):")
+        for row in show:
+            lines.append(f"• {row.get('ticker', 'N/A')}: {row.get('exclusion_reason', 'N/A')}")
+        if len(failed) > len(show):
+            lines.append(f"… y {len(failed) - len(show)} más descartadas en puertas duras.")
+    return "\n".join(lines)
 
 
 # --------------------------------------------------------------------------- #
@@ -382,6 +441,10 @@ def build_report(data: "ReportData | Dict[str, Any]") -> str:
             aviso += f"\nCandidatas sin validar por IA: {nombres}"
         blocks.append(aviso)
 
+    diagnostic = _diagnostic_block(data.filter_log)
+    if diagnostic:
+        blocks.append(diagnostic)
+
     rendered_picks: List[Dict[str, Any]] = []
     if no_trade_reason is not None:
         blocks.append(f"🚫 **NO OPERAR**\n• {no_trade_reason}")
@@ -518,5 +581,6 @@ def _report_data_from_pipeline(result: Dict[str, Any]) -> ReportData:
         gemini=result.get("gemini"),
         failures=result.get("failures", {}),
         filter_no_trade_reason=result.get("no_trade_reason"),
+        filter_log=result.get("filter_log", []),
         no_trade_reason=result.get("no_trade_reason"),
     )
