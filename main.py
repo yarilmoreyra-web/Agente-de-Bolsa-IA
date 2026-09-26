@@ -150,7 +150,9 @@ def run_pipeline(
     wait_for_snapshot: bool = True,
     env: Any = None,
     save_bars: bool = True,
+    relax_premarket_volume: bool = False,
 ) -> dict[str, Any]:
+    
     """Ejecuta el análisis completo de un día y devuelve todo lo calculado.
 
     Pasos: datos diarios y barras 5m históricas → contexto de mercado →
@@ -281,6 +283,36 @@ def run_pipeline(
         "disclaimer": DISCLAIMER,
     }
 
+    
+    if relax_premarket_volume:
+        print("      ⚠️ Fecha distinta a hoy: volumen pre-market no es confiable "
+              "en yfinance para sesiones pasadas. Puerta de volumen pre-market "
+              "DESACTIVADA para esta corrida (solo pruebas).")
+        logger.warning(
+            "Corrida con session_date != hoy: se relaja min_premarket_volume "
+            "y prefilter_premarket_volume (limitación conocida de yfinance)."
+        )
+
+    news_tickers = candidate_filter.prefilter_for_news(
+        analyses, relax_premarket_volume=relax_premarket_volume)
+    print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
+    news = news_module.gather_news(
+        news_tickers, news_module.build_providers(env)) if news_tickers else {}
+    confirmed = sum(1 for item in news.values() if item.catalyst_confirmed)
+    print(f"      {confirmed} con catalizador confirmado.")
+
+    outcome = candidate_filter.filter_candidates(
+        analyses, news, context, relax_premarket_volume=relax_premarket_volume)
+    print(f"[7/7] Candidatas: {', '.join(outcome.candidates) or 'ninguna'}")
+
+    if outcome.candidates and getattr(env, "alphavantage_enabled", False):
+        for provider in news_module.build_providers(env):
+            if provider.name == "alphavantage":
+                news = news_module.enrich_with_alphavantage(
+                    outcome.candidates, news, provider)
+                outcome = candidate_filter.filter_candidates(
+                    analyses, news, context,
+                    relax_premarket_volume=relax_premarket_volume)
 
 def print_provisional_summary(result: dict[str, Any]) -> None:
     """Resumen rápido por consola. El informe formal lo genera ``report.py``."""
