@@ -148,7 +148,7 @@ def resolve_direction(analysis: Mapping[str, Any], direction_mode: str) -> str:
 # --------------------------------------------------------------------------- #
 def passes_prefilter(
     analysis: Mapping[str, Any], cfg: config.FilterConfig | None = None,
-    direction_mode: str | None = None,
+    direction_mode: str | None = None, relax_premarket_volume: bool = False,
 ) -> bool:
     """Criterio mínimo de gap y volumen pre-market para merecer una llamada de noticias."""
     cfg = cfg or config.FILTER
@@ -163,8 +163,9 @@ def passes_prefilter(
         return False
     if direction_mode != "both" and cfg.require_positive_gap_long_only and gap <= 0:
         return False
-    return abs(gap) >= cfg.prefilter_abs_gap_pct \
-        and volume >= cfg.prefilter_premarket_volume
+    if abs(gap) < cfg.prefilter_abs_gap_pct:
+        return False
+    return relax_premarket_volume or volume >= cfg.prefilter_premarket_volume
 
 
 def prefilter_for_news(
@@ -172,6 +173,7 @@ def prefilter_for_news(
     cfg: config.FilterConfig | None = None,
     limit: int | None = None,
     direction_mode: str | None = None,
+    relax_premarket_volume: bool = False,
 ) -> list[str]:
     """Tickers a los que merece la pena pedir noticias, de más a menos prometedor.
 
@@ -183,7 +185,7 @@ def prefilter_for_news(
 
     scored: list[tuple[float, float, str]] = []
     for ticker, analysis in analyses.items():
-        if not passes_prefilter(analysis, cfg, direction_mode):
+        if not passes_prefilter(analysis, cfg, direction_mode, relax_premarket_volume):
             continue
         gap = abs(_num(analysis.get("gap_pct"), 0.0) or 0.0)
         volume = _num(analysis.get("premarket", {}).get("premarket_volume"), 0.0) or 0.0
@@ -192,8 +194,9 @@ def prefilter_for_news(
     scored.sort(key=lambda row: (row[0], row[1]), reverse=True)
     selected = [ticker for _, _, ticker in scored[:max(0, limit)]]
     logger.info(
-        "Pre-filtro de noticias: %d de %d tickers (límite %d).",
+        "Pre-filtro de noticias: %d de %d tickers (límite %d)%s.",
         len(selected), len(analyses), limit,
+        " [volumen pre-market relajado]" if relax_premarket_volume else "",
     )
     return selected
 
@@ -203,8 +206,9 @@ def prefilter_for_news(
 # --------------------------------------------------------------------------- #
 def apply_hard_gates(
     analysis: Mapping[str, Any], cfg: config.FilterConfig | None = None,
-    direction_mode: str | None = None,
+    direction_mode: str | None = None, relax_premarket_volume: bool = False,
 ) -> list[str]:
+
     """Motivos por los que el ticker queda descartado. Lista vacía = pasa."""
     cfg = cfg or config.FILTER
     direction_mode = direction_mode or getattr(config, "DIRECTION_MODE", "long_only")
@@ -237,12 +241,14 @@ def apply_hard_gates(
             f"volumen en dólares {dollar_volume/1e6:,.1f}M < "
             f"{cfg.min_avg_dollar_volume_20d/1e6:,.0f}M USD")
 
-    pm_volume = _num(premarket.get("premarket_volume"))
-    if pm_volume is None:
-        failures.append("sin volumen pre-market")
-    elif pm_volume < cfg.min_premarket_volume:
-        failures.append(
-            f"volumen pre-market {pm_volume:,.0f} < {cfg.min_premarket_volume:,.0f}")
+    if not relax_premarket_volume:
+        pm_volume = _num(premarket.get("premarket_volume"))
+        if pm_volume is None:
+            failures.append("sin volumen pre-market")
+        elif pm_volume < cfg.min_premarket_volume:
+            failures.append(
+                f"volumen pre-market {pm_volume:,.0f} < {cfg.min_premarket_volume:,.0f}")
+    
 
     gap = _num(analysis.get("gap_pct"))
     if gap is None:
@@ -514,7 +520,8 @@ def filter_candidates(
     cfg: config.FilterConfig | None = None,
     direction_mode: str | None = None,
     relax_premarket_volume: bool = False,
-) -> FilterOutcome:
+) -> FilterOutcome:   
+
     """Aplica puertas duras y puntuación a todo el universo y elige las candidatas.
 
     ``news`` admite ``TickerNews`` o diccionarios equivalentes. Devuelve un
