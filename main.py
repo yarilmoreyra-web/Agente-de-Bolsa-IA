@@ -199,6 +199,16 @@ def run_pipeline(
             quality_counts.get(snapshot.premarket_quality, 0) + 1
     print(f"      Calidad del dato: {quality_counts}")
 
+    if relax_premarket_volume:
+        print("      ⚠️ Fecha distinta a hoy: volumen pre-market no es confiable "
+              "en yfinance para sesiones pasadas. Puerta de volumen pre-market "
+              "DESACTIVADA para esta corrida (solo pruebas).")
+        logger.warning(
+            "Corrida con session_date != hoy: se relaja min_premarket_volume "
+            "y prefilter_premarket_volume (limitación conocida de yfinance)."
+        )
+
+    
     # 4) Indicadores y métricas ------------------------------------------------
     print("[5/7] Calculando indicadores, RVOL, niveles y fuerza relativa...")
     analyses, failures = technical_analysis.analyze_many(
@@ -209,16 +219,19 @@ def run_pipeline(
     print(f"      {len(analyses)} analizados, {len(failures)} con error.")
 
     # 5) Noticias solo de los tickers que valen la pena ------------------------
-    news_tickers = candidate_filter.prefilter_for_news(analyses)
-    print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
+    news_tickers = candidate_filter.prefilter_for_news(
+        analyses, relax_premarket_volume=relax_premarket_volume)
+        print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
     news = news_module.gather_news(
         news_tickers, news_module.build_providers(env)) if news_tickers else {}
     confirmed = sum(1 for item in news.values() if item.catalyst_confirmed)
     print(f"      {confirmed} con catalizador confirmado.")
 
     # 6) Filtro y selección de candidatas --------------------------------------
-    outcome = candidate_filter.filter_candidates(analyses, news, context)
+    outcome = candidate_filter.filter_candidates(
+        analyses, news, context, relax_premarket_volume=relax_premarket_volume)
     print(f"[7/7] Candidatas: {', '.join(outcome.candidates) or 'ninguna'}")
+    
 
     # ⚙️ Segunda fuente de noticias (Alpha Vantage), solo para las finalistas.
     if outcome.candidates and getattr(env, "alphavantage_enabled", False):
@@ -280,9 +293,10 @@ def run_pipeline(
             "market_context": context.failures,
         },
         "intraday_files": [str(path) for path in saved],
+        "premarket_volume_gate_relaxed": relax_premarket_volume,
         "disclaimer": DISCLAIMER,
     }
-
+        
     
     if relax_premarket_volume:
         print("      ⚠️ Fecha distinta a hoy: volumen pre-market no es confiable "
@@ -388,8 +402,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     today = now.date()
     target = args.date or today
     schedule = config.SCHEDULE
+    is_historical_run = target != today
 
     print("=== Agente de análisis pre-market ===")
+   
     print(
         f"Fecha objetivo: {target} | Hora actual en Nueva York: "
         f"{now.strftime('%H:%M')} | Modo: {_describe_mode(args)}"
@@ -481,7 +497,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             wait_for_snapshot=not args.no_wait,
             env=env,
             save_bars=not args.dry_run,
+            relax_premarket_volume=is_historical_run,
         )
+       
     except Exception as exc:  # noqa: BLE001 - el fallo debe verse en el log y en la salida
         logger.exception("El análisis falló: %s", exc)
         print(f"ERROR durante el análisis: {type(exc).__name__}: {exc}")
