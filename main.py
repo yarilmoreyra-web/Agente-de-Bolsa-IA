@@ -152,7 +152,6 @@ def run_pipeline(
     save_bars: bool = True,
     relax_premarket_volume: bool = False,
 ) -> dict[str, Any]:
-    
     """Ejecuta el análisis completo de un día y devuelve todo lo calculado.
 
     Pasos: datos diarios y barras 5m históricas → contexto de mercado →
@@ -208,7 +207,6 @@ def run_pipeline(
             "y prefilter_premarket_volume (limitación conocida de yfinance)."
         )
 
-    
     # 4) Indicadores y métricas ------------------------------------------------
     print("[5/7] Calculando indicadores, RVOL, niveles y fuerza relativa...")
     analyses, failures = technical_analysis.analyze_many(
@@ -221,7 +219,7 @@ def run_pipeline(
     # 5) Noticias solo de los tickers que valen la pena ------------------------
     news_tickers = candidate_filter.prefilter_for_news(
         analyses, relax_premarket_volume=relax_premarket_volume)
-        print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
+    print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
     news = news_module.gather_news(
         news_tickers, news_module.build_providers(env)) if news_tickers else {}
     confirmed = sum(1 for item in news.values() if item.catalyst_confirmed)
@@ -231,7 +229,6 @@ def run_pipeline(
     outcome = candidate_filter.filter_candidates(
         analyses, news, context, relax_premarket_volume=relax_premarket_volume)
     print(f"[7/7] Candidatas: {', '.join(outcome.candidates) or 'ninguna'}")
-    
 
     # ⚙️ Segunda fuente de noticias (Alpha Vantage), solo para las finalistas.
     if outcome.candidates and getattr(env, "alphavantage_enabled", False):
@@ -239,7 +236,9 @@ def run_pipeline(
             if provider.name == "alphavantage":
                 news = news_module.enrich_with_alphavantage(
                     outcome.candidates, news, provider)
-                outcome = candidate_filter.filter_candidates(analyses, news, context)
+                outcome = candidate_filter.filter_candidates(
+                    analyses, news, context,
+                    relax_premarket_volume=relax_premarket_volume)
 
     candidates = candidate_filter.candidates_payload(outcome, analyses, news)
 
@@ -256,6 +255,7 @@ def run_pipeline(
         gemini = gemini_analyzer.analyze(
             session_date, snapshot_ts, session_type, context, candidates,
             api_key=getattr(env, "gemini_api_key", ""),
+            model=getattr(env, "gemini_model", "") or config.DEFAULT_GEMINI_MODEL,
         )
         estado = "OK" if gemini.available else f"degradado ({gemini.error})"
         print(f"      Gemini: {estado}, {len(gemini.picks)} picks validados.")
@@ -296,37 +296,7 @@ def run_pipeline(
         "premarket_volume_gate_relaxed": relax_premarket_volume,
         "disclaimer": DISCLAIMER,
     }
-        
-    
-    if relax_premarket_volume:
-        print("      ⚠️ Fecha distinta a hoy: volumen pre-market no es confiable "
-              "en yfinance para sesiones pasadas. Puerta de volumen pre-market "
-              "DESACTIVADA para esta corrida (solo pruebas).")
-        logger.warning(
-            "Corrida con session_date != hoy: se relaja min_premarket_volume "
-            "y prefilter_premarket_volume (limitación conocida de yfinance)."
-        )
 
-    news_tickers = candidate_filter.prefilter_for_news(
-        analyses, relax_premarket_volume=relax_premarket_volume)
-    print(f"[6/7] Buscando noticias de {len(news_tickers)} tickers...")
-    news = news_module.gather_news(
-        news_tickers, news_module.build_providers(env)) if news_tickers else {}
-    confirmed = sum(1 for item in news.values() if item.catalyst_confirmed)
-    print(f"      {confirmed} con catalizador confirmado.")
-
-    outcome = candidate_filter.filter_candidates(
-        analyses, news, context, relax_premarket_volume=relax_premarket_volume)
-    print(f"[7/7] Candidatas: {', '.join(outcome.candidates) or 'ninguna'}")
-
-    if outcome.candidates and getattr(env, "alphavantage_enabled", False):
-        for provider in news_module.build_providers(env):
-            if provider.name == "alphavantage":
-                news = news_module.enrich_with_alphavantage(
-                    outcome.candidates, news, provider)
-                outcome = candidate_filter.filter_candidates(
-                    analyses, news, context,
-                    relax_premarket_volume=relax_premarket_volume)
 
 def print_provisional_summary(result: dict[str, Any]) -> None:
     """Resumen rápido por consola. El informe formal lo genera ``report.py``."""
@@ -405,7 +375,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     is_historical_run = target != today
 
     print("=== Agente de análisis pre-market ===")
-   
     print(
         f"Fecha objetivo: {target} | Hora actual en Nueva York: "
         f"{now.strftime('%H:%M')} | Modo: {_describe_mode(args)}"
@@ -499,7 +468,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             save_bars=not args.dry_run,
             relax_premarket_volume=is_historical_run,
         )
-       
     except Exception as exc:  # noqa: BLE001 - el fallo debe verse en el log y en la salida
         logger.exception("El análisis falló: %s", exc)
         print(f"ERROR durante el análisis: {type(exc).__name__}: {exc}")

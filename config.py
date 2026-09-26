@@ -23,7 +23,7 @@ TIMEZONE: str = "America/New_York"
 
 # Modelo de Gemini por defecto. Se puede cambiar SIN tocar el código con la
 # variable de entorno GEMINI_MODEL (ejemplo: GEMINI_MODEL=gemini-2.5-flash).
-DEFAULT_GEMINI_MODEL: str = "gemini-2.5-flash"
+DEFAULT_GEMINI_MODEL: str = "gemini-3.5-flash"
 
 DIRECTION_LONG_ONLY = "long_only"
 DIRECTION_BOTH = "both"
@@ -229,8 +229,8 @@ class GeminiConfig:
     temperature: float = 0.2
     max_output_tokens: int = 8192
     # Intentos totales ante 429/5xx o JSON inválido (1 llamada + 1 reintento).
-    attempts: int = 2
-    retry_base_delay: float = 3.0
+    attempts: int = 5
+    retry_base_delay: float = 5.0
     timeout_seconds: int = 90
     # Candidatas que se envían en la única llamada.
     max_candidates_sent: int = 10
