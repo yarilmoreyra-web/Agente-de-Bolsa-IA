@@ -11,7 +11,7 @@ from utils import NY_TZ
 
 SESSION = date(2026, 9, 21)
 SNAPSHOT = datetime(2026, 9, 21, 8, 45, tzinfo=NY_TZ)
-FAST_CFG = config.GeminiConfig(retry_base_delay=0.0)
+FAST_CFG = config.GeminiConfig(attempts=2, retry_base_delay=0.0)
 
 
 # --------------------------------------------------------------------------- #

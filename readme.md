@@ -56,6 +56,10 @@ trading-agent/
 ├── candidate_filter.py     filtro y puntuación de candidatas
 ├── gemini_analyzer.py      llamada a Gemini y validación de su respuesta
 ├── report.py               informe en Markdown (y versión HTML para Telegram)
+├── update_agent.py         actualización post-apertura: flujo completo (main.py --update)
+├── post_open.py            métricas y estado de cada selección a las 10:00 (Python)
+├── update_analyzer.py      Gemini compara «mañana vs ahora» + validación
+├── update_report.py        texto del Telegram de la actualización
 ├── telegram.py             envío a Telegram (reintentos, mensajes largos)
 ├── history.py              histórico JSON y CSV
 ├── backtest.py             comparación posterior con el comportamiento real
@@ -68,11 +72,12 @@ trading-agent/
 │   ├── history/            un JSON por día (AAAA-MM-DD.json)
 │   ├── history.csv         una fila por candidata y día
 │   ├── intraday/           barras de 5 min guardadas para el backtest
-│   ├── reports/            informe de cada día en Markdown
+│   ├── reports/            informe de cada día en Markdown (+ AAAA-MM-DD_actualizacion.md)
+│   ├── updates/            actualización de las 10:00 de cada día (AAAA-MM-DD.json)
 │   ├── backtests/          resultados de la validación posterior
 │   └── macro_events.json   eventos macro/Fed (lo mantienes tú)
 ├── logs/agent.log          registro de ejecución (no se sube a GitHub)
-└── .github/workflows/daily_agent.yml
+└── .github/workflows/      daily_agent.yml (09:00) y update_agent.yml (10:00)
 ```
 
 Si tu proyecto tiene archivos adicionales (por ejemplo, un módulo que orquesta
@@ -131,11 +136,72 @@ python main.py                                          # ejecución normal (sol
 | `--universe RUTA` | Usa otro Excel de tickers. |
 | `--data-check N` | Descarga y muestra indicadores de los N primeros tickers. |
 | `--backtest-date AAAA-MM-DD` | Evalúa a posteriori el informe de esa fecha. |
+| `--update` | Actualización post-apertura (10:00 ET); ver sección 4 bis. Acepta `--date`, `--dry-run`, `--no-gemini`, `--no-telegram`, `--no-wait` y `--force`. |
 
 **Sin `--force`** el agente solo se ejecuta si hoy hay sesión bursátil, si la
 hora en Nueva York está en la ventana permitida (08:00–09:25 por defecto) y si
 el informe de hoy no se envió ya. Si no se cumple, termina con un mensaje claro
 y sin error.
+
+---
+
+## 4 bis. Actualización post-apertura (10:00 ET)
+
+Segunda pasada del día, **30 minutos después de la apertura**: el agente
+reanaliza las candidatas del informe de las 09:00, las compara con lo que
+dijo entonces y envía **otro Telegram** independiente.
+
+| Hora (Nueva York) | Qué ocurre |
+|---|---|
+| ~09:45 | Arranca el workflow `update_agent.yml` y espera. |
+| 10:00 | Toma los datos: barras de 5 min de la sesión regular (09:30–10:00). |
+| 10:00–10:03 | Calcula, revisa noticias nuevas y consulta a Gemini (una llamada). |
+| ~10:03 | Envía el Telegram y guarda `data/updates/AAAA-MM-DD.json`. |
+
+En hora de Lima (mientras EE. UU. está en horario de verano) el mensaje llega
+sobre las 09:03; desde el cambio de hora de noviembre, sobre las 10:03.
+
+**Qué trae el mensaje**
+
+* Mercado a las 08:45 vs ahora (SPY, QQQ, VIX).
+* Por cada selección de la mañana: `Informe 09:00: BUY (HIGH) → Ahora: WAIT`,
+  precio de apertura y actual, VWAP, volumen y RVOL de los primeros 30 min,
+  estado, R/R con el precio actual, si se cumplió la regla de apertura, qué
+  cambió y qué hacer, y noticias publicadas después del informe.
+* Un resumen de cambios (confirmadas, debilitadas, invalidadas...) y las demás
+  candidatas de la mañana, con hasta 2 para vigilar.
+
+**Estados que decide Python (Gemini no puede contradecirlos)**
+
+| Estado | Significa | Resultado |
+|---|---|---|
+| `STOP_TOCADO` | El precio llegó al stop del informe. | Invalidada · NO_TRADE |
+| `OBJETIVO_1_ALCANZADO` | Llegó al objetivo 1 antes que al stop. | Objetivo alcanzado · NO_TRADE (no perseguir) |
+| `EXTENDIDA` | Pasó el máximo de entrada válido. | Extendida · WAIT |
+| `EN_CONTRA` | Bajo la zona de entrada, sin tocar el stop. | Debilitada · WAIT |
+| `EN_ZONA` | Sigue en la zona. | Gemini valora; BUY solo si el R/R actual ≥ mínimo |
+
+Si en una misma barra de 5 min se tocan el stop y el objetivo 1, se cuenta el
+stop primero (lectura conservadora).
+
+**Qué NO hace:** no inventa niveles nuevos (usa los del informe de las 09:00 y
+solo recalcula el R/R), no busca tickers fuera de las candidatas de la mañana
+y no modifica el histórico de la mañana. Si no hay informe de la mañana, o el
+de hoy fue «NO OPERAR», lo dice y no genera señales nuevas.
+
+Ajustes en `config.py` → `UPDATE`: hora de los datos (`snapshot_time`), ventana
+válida (`run_window_start/end`), nº de candidatas (`max_tickers`), tamaño de la
+lista de vigilancia (`watchlist_size`) y si se refrescan las noticias.
+
+Prueba local (con el histórico de esa fecha ya generado):
+
+```bash
+python main.py --update --date 2026-09-25 --dry-run --force --no-wait   # muestra el mensaje, no envía
+```
+
+En GitHub Actions la ejecución manual de **Actualización post-apertura** admite
+las mismas opciones (`date`, `dry_run`, `no_gemini`, `force`). Comparte grupo de
+concurrencia con el workflow de las 09:00: nunca se ejecutan a la vez.
 
 ---
 

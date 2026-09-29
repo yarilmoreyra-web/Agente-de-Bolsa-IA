@@ -306,13 +306,18 @@ def _response_text(response: Any) -> str:
 def call_gemini(
     payload: Mapping[str, Any], api_key: str, model: str,
     direction_mode: str = "long_only", cfg: config.GeminiConfig | None = None,
-    client: Any = None,
+    client: Any = None, system_instruction: str | None = None,
+    schema: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Una sola llamada (con reintentos) y el JSON crudo ya parseado.
 
     ``client`` permite inyectar un doble de prueba; en producción se crea con
     ``genai.Client(api_key=...)``. Lanza ``GeminiError`` si no se consigue un
     JSON válido tras ``cfg.attempts`` intentos.
+
+    ``system_instruction`` y ``schema`` son opcionales: por defecto se usan los
+    del informe pre-market. La actualización post-apertura (``update_analyzer``)
+    pasa los suyos y reutiliza así los reintentos y el parseo de esta función.
     """
     import time as time_module  # noqa: PLC0415
 
@@ -328,11 +333,14 @@ def call_gemini(
         "model": model,
         "contents": json.dumps(payload, ensure_ascii=False),
         "config": {
-            "system_instruction": build_system_instruction(direction_mode),
+            "system_instruction": system_instruction
+            if system_instruction is not None
+            else build_system_instruction(direction_mode),
             "temperature": cfg.temperature,
             "max_output_tokens": cfg.max_output_tokens,
             "response_mime_type": "application/json",
-            "response_schema": response_schema(direction_mode),
+            "response_schema": schema if schema is not None
+            else response_schema(direction_mode),
         },
     }
 

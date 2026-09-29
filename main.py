@@ -5,6 +5,7 @@ Ejemplos de uso:
     python main.py --dry-run --no-gemini --no-telegram --force
     python main.py --date 2026-09-21
     python main.py --backtest-date 2026-09-21
+    python main.py --update            # actualización 30 min después de la apertura
 
 Cronograma que sigue ``run_pipeline`` (hora de Nueva York):
 
@@ -12,6 +13,10 @@ Cronograma que sigue ``run_pipeline`` (hora de Nueva York):
     08:45        snapshot pre-market (``SCHEDULE.snapshot_time``)
     08:45-08:57  indicadores, pre-filtro, noticias, filtro, Gemini y validación
     09:00        informe, envío por Telegram e histórico
+
+La actualización post-apertura (``--update``, ver ``update_agent.py``) es una
+segunda ejecución independiente a las 10:00 ET: reanaliza las candidatas de
+esta mañana, las compara con el informe de las 09:00 y envía otro Telegram.
 
 Códigos de salida: 0 = correcto (incluye "hoy no toca ejecutar"),
 1 = error de configuración o de datos, 2 = función aún no disponible.
@@ -36,6 +41,7 @@ import news as news_module
 import report as report_module
 import technical_analysis
 import telegram as telegram_module
+import update_agent
 import utils
 import requests
 
@@ -91,6 +97,12 @@ def build_parser() -> argparse.ArgumentParser:
              "'ya enviado'. Útil para pruebas manuales.",
     )
     parser.add_argument(
+        "--update", action="store_true",
+        help="Actualización post-apertura (10:00 ET): reanaliza las candidatas de "
+             "la mañana, las compara con el informe de las 09:00 y envía un nuevo "
+             "Telegram. Requiere el histórico de la mañana.",
+    )
+    parser.add_argument(
         "--universe", type=Path, default=None,
         help="Ruta alternativa al Excel de tickers (por defecto lista_tickers.xlsx).",
     )
@@ -112,6 +124,7 @@ def _describe_mode(args: argparse.Namespace) -> str:
     """Resume en una línea los flags activos."""
     active = [
         name for name, on in (
+            ("update", args.update),
             ("dry-run", args.dry_run),
             ("no-gemini", args.no_gemini),
             ("no-telegram", args.no_telegram),
@@ -367,6 +380,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "se implementa en la Fase 5."
         )
         return 2
+
+    if args.update:
+        return update_agent.run_update_cli(args, env)
 
     now = utils.now_ny()
     today = now.date()

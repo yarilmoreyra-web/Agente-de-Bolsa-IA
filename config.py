@@ -45,6 +45,7 @@ class Paths:
     history_csv: Path = BASE_DIR / "data" / "history.csv"
     intraday_dir: Path = BASE_DIR / "data" / "intraday"
     reports_dir: Path = BASE_DIR / "data" / "reports"
+    updates_dir: Path = BASE_DIR / "data" / "updates"
     backtests_dir: Path = BASE_DIR / "data" / "backtests"
     backtest_summary_csv: Path = BASE_DIR / "data" / "backtest_summary.csv"
     macro_events_file: Path = BASE_DIR / "data" / "macro_events.json"
@@ -77,6 +78,41 @@ class ScheduleConfig:
 
 
 SCHEDULE = ScheduleConfig()
+
+
+# --------------------------------------------------------------------------
+# Actualización post-apertura (segunda pasada del día)
+# --------------------------------------------------------------------------
+@dataclass(frozen=True)
+class UpdateConfig:
+    """Segunda pasada: 30 min después de la apertura reanaliza las candidatas
+    de la mañana, las compara con el informe de las 09:00 y envía otro Telegram.
+
+    Todos los horarios son de Nueva York (ET).
+    """
+
+    # Hora de los datos de la actualización (apertura 09:30 + 30 min).
+    snapshot_time: time = time(10, 0)
+    # Ventana en la que una ejecución programada se considera válida. Descarta
+    # el cron de horario de verano/invierno que no toca y las ejecuciones que
+    # GitHub retrase tanto que ya no serían una actualización "a los 30 min".
+    run_window_start: time = time(9, 35)
+    run_window_end: time = time(10, 30)
+    # Cuántas candidatas de la mañana se reanalizan (las selecciones primero).
+    max_tickers: int = 10
+    # Candidatas no seleccionadas que Gemini puede destacar para vigilar.
+    watchlist_size: int = 2
+    # Vuelve a pedir noticias (solo Yahoo, sin gastar cuota de Alpha Vantage)
+    # para detectar titulares publicados después del informe de las 09:00.
+    refresh_news: bool = True
+    # Referencias de mercado que se comparan (mañana vs. ahora).
+    benchmarks: Tuple[str, ...] = ("SPY", "QQQ", "^VIX")
+    # Una candidata no seleccionada se considera "en movimiento" (modo sin IA)
+    # si se ha movido al menos esto (%) desde la apertura, en cualquier sentido.
+    mover_pct: float = 1.0
+
+
+UPDATE = UpdateConfig()
 
 
 # --------------------------------------------------------------------------
@@ -635,6 +671,21 @@ def validate_config() -> None:
         )
     if sched.report_time >= sched.regular_open:
         raise ValueError("El informe debe enviarse antes de la apertura.")
+    upd = UPDATE
+    if not (
+        sched.regular_open
+        < upd.run_window_start
+        < upd.snapshot_time
+        <= upd.run_window_end
+    ):
+        raise ValueError(
+            "Horarios de la actualización incoherentes: se exige apertura < "
+            "inicio de ventana < hora de datos <= fin de ventana."
+        )
+    if upd.snapshot_time >= sched.regular_close:
+        raise ValueError("La actualización debe hacerse antes del cierre.")
+    if upd.max_tickers < 1 or upd.watchlist_size < 0:
+        raise ValueError("UPDATE.max_tickers >= 1 y UPDATE.watchlist_size >= 0.")
     if TRADE.direction_mode not in (DIRECTION_LONG_ONLY, DIRECTION_BOTH):
         raise ValueError(
             f"DIRECTION_MODE inválido: {TRADE.direction_mode!r} "
