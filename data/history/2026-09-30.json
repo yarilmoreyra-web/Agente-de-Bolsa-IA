@@ -1,0 +1,2833 @@
+{
+  "date": "2026-09-30",
+  "universe": {
+    "count": 135,
+    "source": "/home/runner/work/Agente-de-Bolsa-IA/Agente-de-Bolsa-IA/lista_tickers.xlsx"
+  },
+  "market_data": {
+    "premarket": {},
+    "context": {
+      "session_date": "2026-09-30",
+      "snapshot_ts": "2026-09-30T08:55:00-04:00",
+      "quotes": {
+        "SPY": {
+          "symbol": "SPY",
+          "price": 767.1,
+          "prev_close": 764.2,
+          "change_pct": 0.3795,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.187
+        },
+        "QQQ": {
+          "symbol": "QQQ",
+          "price": 741.0,
+          "prev_close": 737.93,
+          "change_pct": 0.416,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.275
+        },
+        "DIA": {
+          "symbol": "DIA",
+          "price": 514.1658,
+          "prev_close": 512.88,
+          "change_pct": 0.2507,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.9884
+        },
+        "ES=F": {
+          "symbol": "ES=F",
+          "price": 7756.25,
+          "prev_close": 7732.0,
+          "change_pct": 0.3136,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.2737
+        },
+        "NQ=F": {
+          "symbol": "NQ=F",
+          "price": 30707.25,
+          "prev_close": 30613.25,
+          "change_pct": 0.3071,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.3383
+        },
+        "^VIX": {
+          "symbol": "^VIX",
+          "price": 15.77,
+          "prev_close": 16.04,
+          "change_pct": -1.6833,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 12.8783
+        },
+        "^TNX": {
+          "symbol": "^TNX",
+          "price": 5.23,
+          "prev_close": 5.255,
+          "change_pct": -0.4757,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 5.777
+        },
+        "XLK": {
+          "symbol": "XLK",
+          "price": 195.4,
+          "prev_close": 194.5,
+          "change_pct": 0.4627,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.9018
+        },
+        "XLF": {
+          "symbol": "XLF",
+          "price": 54.13,
+          "prev_close": 54.01,
+          "change_pct": 0.2222,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.4416
+        },
+        "XLE": {
+          "symbol": "XLE",
+          "price": 61.82,
+          "prev_close": 61.54,
+          "change_pct": 0.455,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.3885
+        },
+        "XLV": {
+          "symbol": "XLV",
+          "price": 170.32,
+          "prev_close": 170.73,
+          "change_pct": -0.2401,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 0.4944
+        },
+        "XLY": {
+          "symbol": "XLY",
+          "price": 108.92,
+          "prev_close": 109.15,
+          "change_pct": -0.2107,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.8309
+        },
+        "XLP": {
+          "symbol": "XLP",
+          "price": 82.13,
+          "prev_close": 81.85,
+          "change_pct": 0.3421,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.0637
+        },
+        "XLI": {
+          "symbol": "XLI",
+          "price": 169.4,
+          "prev_close": 169.13,
+          "change_pct": 0.1596,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -0.6695
+        },
+        "XLB": {
+          "symbol": "XLB",
+          "price": 49.31,
+          "prev_close": 49.1,
+          "change_pct": 0.4277,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.83
+        },
+        "XLU": {
+          "symbol": "XLU",
+          "price": 39.83,
+          "prev_close": 39.71,
+          "change_pct": 0.3022,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -2.0232
+        },
+        "XLRE": {
+          "symbol": "XLRE",
+          "price": 41.58,
+          "prev_close": 41.34,
+          "change_pct": 0.5806,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.7294
+        },
+        "XLC": {
+          "symbol": "XLC",
+          "price": 111.64,
+          "prev_close": 111.47,
+          "change_pct": 0.1525,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -1.8145
+        }
+      },
+      "indices": {
+        "SPY": {
+          "symbol": "SPY",
+          "price": 767.1,
+          "prev_close": 764.2,
+          "change_pct": 0.3795,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.187
+        },
+        "QQQ": {
+          "symbol": "QQQ",
+          "price": 741.0,
+          "prev_close": 737.93,
+          "change_pct": 0.416,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.275
+        },
+        "DIA": {
+          "symbol": "DIA",
+          "price": 514.1658,
+          "prev_close": 512.88,
+          "change_pct": 0.2507,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.9884
+        }
+      },
+      "futures": {
+        "ES=F": {
+          "symbol": "ES=F",
+          "price": 7756.25,
+          "prev_close": 7732.0,
+          "change_pct": 0.3136,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.2737
+        },
+        "NQ=F": {
+          "symbol": "NQ=F",
+          "price": 30707.25,
+          "prev_close": 30613.25,
+          "change_pct": 0.3071,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.3383
+        }
+      },
+      "volatility": {
+        "^VIX": {
+          "symbol": "^VIX",
+          "price": 15.77,
+          "prev_close": 16.04,
+          "change_pct": -1.6833,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 12.8783
+        }
+      },
+      "rates": {
+        "^TNX": {
+          "symbol": "^TNX",
+          "price": 5.23,
+          "prev_close": 5.255,
+          "change_pct": -0.4757,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 5.777
+        }
+      },
+      "sectors": {
+        "XLK": {
+          "symbol": "XLK",
+          "price": 195.4,
+          "prev_close": 194.5,
+          "change_pct": 0.4627,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.9018
+        },
+        "XLF": {
+          "symbol": "XLF",
+          "price": 54.13,
+          "prev_close": 54.01,
+          "change_pct": 0.2222,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.4416
+        },
+        "XLE": {
+          "symbol": "XLE",
+          "price": 61.82,
+          "prev_close": 61.54,
+          "change_pct": 0.455,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -0.3885
+        },
+        "XLV": {
+          "symbol": "XLV",
+          "price": 170.32,
+          "prev_close": 170.73,
+          "change_pct": -0.2401,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": 0.4944
+        },
+        "XLY": {
+          "symbol": "XLY",
+          "price": 108.92,
+          "prev_close": 109.15,
+          "change_pct": -0.2107,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.8309
+        },
+        "XLP": {
+          "symbol": "XLP",
+          "price": 82.13,
+          "prev_close": 81.85,
+          "change_pct": 0.3421,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -1.0637
+        },
+        "XLI": {
+          "symbol": "XLI",
+          "price": 169.4,
+          "prev_close": 169.13,
+          "change_pct": 0.1596,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -0.6695
+        },
+        "XLB": {
+          "symbol": "XLB",
+          "price": 49.31,
+          "prev_close": 49.1,
+          "change_pct": 0.4277,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.83
+        },
+        "XLU": {
+          "symbol": "XLU",
+          "price": 39.83,
+          "prev_close": 39.71,
+          "change_pct": 0.3022,
+          "source": "premarket",
+          "quality": "ok",
+          "return_5d_pct": -2.0232
+        },
+        "XLRE": {
+          "symbol": "XLRE",
+          "price": 41.58,
+          "prev_close": 41.34,
+          "change_pct": 0.5806,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -2.7294
+        },
+        "XLC": {
+          "symbol": "XLC",
+          "price": 111.64,
+          "prev_close": 111.47,
+          "change_pct": 0.1525,
+          "source": "premarket",
+          "quality": "stale",
+          "return_5d_pct": -1.8145
+        }
+      },
+      "sector_leaders": [
+        {
+          "symbol": "XLRE",
+          "change_pct": 0.5806
+        },
+        {
+          "symbol": "XLK",
+          "change_pct": 0.4627
+        },
+        {
+          "symbol": "XLE",
+          "change_pct": 0.455
+        }
+      ],
+      "sector_laggards": [
+        {
+          "symbol": "XLV",
+          "change_pct": -0.2401
+        },
+        {
+          "symbol": "XLY",
+          "change_pct": -0.2107
+        },
+        {
+          "symbol": "XLC",
+          "change_pct": 0.1525
+        }
+      ],
+      "regime": {
+        "volatility": "baja",
+        "vix_level": 15.77,
+        "tone": "neutral",
+        "futures_avg_pct": 0.31,
+        "label": "neutral",
+        "against_longs": false
+      },
+      "macro": {
+        "loaded": false,
+        "today": [],
+        "upcoming": [],
+        "note": "Calendario macro no cargado para hoy",
+        "file": "/home/runner/work/Agente-de-Bolsa-IA/Agente-de-Bolsa-IA/data/macro_events.json"
+      },
+      "summary": "SPY +0.38% | QQQ +0.42% | DIA +0.25% | VIX 15.77 (baja) | 10 años 5.23%. Régimen: neutral (tono neutral). Sectores líderes: XLRE +0.58%, XLK +0.46%. Calendario macro no cargado para hoy.",
+      "failures": {}
+    }
+  },
+  "indicators": {},
+  "catalysts": {},
+  "filter_log": [
+    {
+      "ticker": "AAPL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.35% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.35% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "AGX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen medio 20d 460,485 < 500,000",
+        "volumen pre-market 0 < 10,000",
+        "gap -1.16% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen medio 20d 460,485 < 500,000; volumen pre-market 0 < 10,000; gap -1.16% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "ALAB",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "ALVO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen en dólares 6.4M < 10M USD",
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen en dólares 6.4M < 10M USD; volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "AMAT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.39% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.39% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "AMD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.38% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.38% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "AMZN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.32% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.32% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "ANET",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "APA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.64% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.64% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "APH",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "APLD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "APP",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -1.46% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -1.46% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "ARM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.45% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.45% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "ASML",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.19% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.19% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "AUNA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "volumen medio 20d 113,195 < 500,000",
+        "volumen en dólares 0.6M < 10M USD",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); volumen medio 20d 113,195 < 500,000; volumen en dólares 0.6M < 10M USD; sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "AVGO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "AXP",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "BABA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "BBOT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 3.85 < 5.00 USD",
+        "volumen en dólares 3.8M < 10M USD",
+        "volumen pre-market 0 < 10,000",
+        "gap -1.79% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 3.85 < 5.00 USD; volumen en dólares 3.8M < 10M USD; volumen pre-market 0 < 10,000; gap -1.79% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "BE",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "C",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.30% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.30% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "CAT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.35% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.35% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "CBRS",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -4.87% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -4.87% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "CF",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "CIEN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CIFR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CLOV",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 4.34 < 5.00 USD",
+        "volumen pre-market 0 < 10,000",
+        "gap +0.40% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 4.34 < 5.00 USD; volumen pre-market 0 < 10,000; gap +0.40% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "CLSK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "COHR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CORZ",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "COUR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 4.98 < 5.00 USD",
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 4.98 < 5.00 USD; volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CRDO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CRM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CRWD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.45% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.45% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "CRWV",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "CTVA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "CVX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.50% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.50% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "DELL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "DUOL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.01% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.01% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "ENVA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "volumen medio 20d 422,815 < 500,000",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); volumen medio 20d 422,815 < 500,000; sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "ETN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "ETOR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.31% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.31% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "FDX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "FIX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen medio 20d 316,055 < 500,000",
+        "volumen pre-market 0 < 10,000",
+        "gap +0.09% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen medio 20d 316,055 < 500,000; volumen pre-market 0 < 10,000; gap +0.09% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "FLEX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.18% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.18% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "FPS",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "GE",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "GEV",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "GLW",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "GNRC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.37% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.37% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "GOOGL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "HALO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.01% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.01% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "HEI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen medio 20d 487,195 < 500,000",
+        "volumen pre-market 0 < 10,000",
+        "gap +0.35% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen medio 20d 487,195 < 500,000; volumen pre-market 0 < 10,000; gap +0.35% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "HOOD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "HPQ",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "HSBC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.53% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.53% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "IBM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.29% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.29% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "ILMN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.74% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.74% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "INTC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "IONQ",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "IREN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "JBL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -4.65% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -4.65% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "JCI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "JPM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.24% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.24% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "KEEL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 3.64 < 5.00 USD",
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 3.64 < 5.00 USD; volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "KEYS",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.18% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.18% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "KLAC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.24% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.24% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "LLY",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.07% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.07% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "LMT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.09% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.09% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "LRCX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "MCD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.27% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.27% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "MCK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "MELI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.47% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.47% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "META",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.85% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.85% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "MNSO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen en dólares 8.4M < 10M USD",
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen en dólares 8.4M < 10M USD; volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "MRVL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "MSFT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.24% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.24% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "MSTR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "MTZ",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.34% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.34% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "MU",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "NBIS",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "NFLX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.52% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.52% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "NOK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "NOW",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.28% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.28% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "NTRA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.36% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.36% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "NVDA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "OKTA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "ORCL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.70% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.70% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "P",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "PANW",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.38% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.38% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "PGNY",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -2.81% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -2.81% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "PNC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "POWL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "PWR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "QCOM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.48% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.48% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "RUSHB",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "volumen medio 20d 229,435 < 500,000",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); volumen medio 20d 229,435 < 500,000; sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "RVMD",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.58% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.58% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "SCCO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.19% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.19% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "SEI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "SHAZ",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "SIMO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.06% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.06% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "SITM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen medio 20d 467,370 < 500,000",
+        "volumen pre-market 0 < 10,000",
+        "gap -1.01% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen medio 20d 467,370 < 500,000; volumen pre-market 0 < 10,000; gap -1.01% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "SKHY",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.38% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.38% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "SLS",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.43% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.43% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "SLXN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 0.27 < 5.00 USD",
+        "volumen pre-market 0 < 10,000",
+        "gap -16.57% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 0.27 < 5.00 USD; volumen pre-market 0 < 10,000; gap -16.57% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "SMCI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "SNDK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "SQM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "SRRK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.23% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.23% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "STM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "STRL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.13% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.13% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "STX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.39% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.39% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TLN",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.80% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.80% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "TMO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.50% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.50% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TOYO",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "precio 4.30 < 5.00 USD",
+        "volumen medio 20d 450,750 < 500,000",
+        "volumen en dólares 2.0M < 10M USD",
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "precio 4.30 < 5.00 USD; volumen medio 20d 450,750 < 500,000; volumen en dólares 2.0M < 10M USD; volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "TSEM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.02% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.02% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TSLA",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.33% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.33% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TSM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.16% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.16% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "TTMI",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.05% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.05% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "TXG",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "UBER",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "VICR",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.23% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.23% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "VIK",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.08% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.08% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "VKTX",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "VRT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "VSH",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.18% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.18% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "VST",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap -0.67% a la baja y el modo es solo largos"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap -0.67% a la baja y el modo es solo largos",
+      "metrics": {}
+    },
+    {
+      "ticker": "VSXY",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "WAT",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "sin datos pre-market (calidad 'missing')",
+        "sin volumen pre-market",
+        "gap no calculable"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "sin datos pre-market (calidad 'missing'); sin volumen pre-market; gap no calculable",
+      "metrics": {}
+    },
+    {
+      "ticker": "WDC",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.13% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.13% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "WELL",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000",
+        "gap +0.08% < 0.5% en valor absoluto"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000; gap +0.08% < 0.5% en valor absoluto",
+      "metrics": {}
+    },
+    {
+      "ticker": "WULF",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "XOM",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    },
+    {
+      "ticker": "YPF",
+      "direction": "LONG",
+      "passed_gates": false,
+      "gates_failed": [
+        "volumen pre-market 0 < 10,000"
+      ],
+      "raw_score": "N/A",
+      "penalty_points": 0.0,
+      "score": "N/A",
+      "components": {},
+      "penalties": [],
+      "selected": false,
+      "rank": "N/A",
+      "exclusion_reason": "volumen pre-market 0 < 10,000",
+      "metrics": {}
+    }
+  ],
+  "candidates": [],
+  "gemini_raw": {},
+  "gemini_validated": {
+    "available": false,
+    "model": "",
+    "market_view": "",
+    "no_trade": true,
+    "no_trade_reason": "Ninguna acción del universo supera el filtro mínimo (catalizador, momentum, volumen y estructura). No se fuerza ninguna operación.",
+    "picks": [],
+    "warnings": [],
+    "raw_response": null,
+    "error": "no hay candidatas: NO OPERAR",
+    "note": "Análisis IA no disponible"
+  },
+  "final_selection": [],
+  "timestamps": {
+    "snapshot": "2026-09-30T08:55:00-04:00",
+    "started": "2026-09-30T08:55:50.522913-04:00",
+    "finished": "2026-09-30T08:56:26.469418-04:00",
+    "sent": "2026-09-30T09:00:01.006345-04:00"
+  },
+  "sources": {
+    "prices": "yfinance",
+    "news": []
+  },
+  "no_trade": true,
+  "no_trade_reason": "Ninguna acción del universo supera el filtro mínimo (catalizador, momentum, volumen y estructura). No se fuerza ninguna operación.",
+  "sent": true,
+  "send_status": {
+    "ok": true
+  },
+  "run_count": 1
+}
